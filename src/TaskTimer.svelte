@@ -48,6 +48,7 @@
         />
     </div>
     <div class="time-spended">
+        <!-- TODO: move .toString().padStart(2, '0') to string representation in timer store -->
         <span>{$timer.h.toString().padStart(2, "0")}:</span>
         <span>{$timer.m.toString().padStart(2, "0")}:</span>
         <span>{$timer.s.toString().padStart(2, "0")}</span>

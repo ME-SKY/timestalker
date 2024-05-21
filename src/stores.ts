@@ -8,27 +8,29 @@ interface TimeData {
     h: number,
     m: number,
     s: number,
+    stringRepresentation?: string
 }
 
-interface TimerData extends timeData {
+interface TimerData extends TimeData {
     timerState: TIMER_STATE,
     timerName: string,
-}
-
-interface Project {
-    name: ProjectName;
-    timeSpent: TimeData;
 }
 
 function timerStore() {
     const timerStorage = writable({ h: 0, m: 0, s: 0, state: 'stopped' as TIMER_STATE, timerName: '' as ProjectName });
     const { subscribe, set, update } = timerStorage;
 
+    const stringRepresentation = derived(timerStorage, ($timer) => {
+        const { h, m, s } = $timer;
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    });
+
     let interval: number | undefined = undefined;
 
+
     function start(timerName: string | undefined) {
-        // const name = timerName !== undefined ? timerName : '';
         update((time) => ({ ...time, state: 'running', timerName: timerName }));
+        
         interval = setInterval(() => {
             update((time) => {
                 console.log('interval running', time.s);
@@ -52,8 +54,9 @@ function timerStore() {
     function pause(): TimeData {
         clearInterval(interval);
         interval = undefined;
+        
         update((time) => ({ ...time, state: 'paused' }));
-        // const time = get();
+       
         const { h, m, s } = get(timerStorage);
         return { h, m, s };
     }
@@ -61,6 +64,7 @@ function timerStore() {
     function reset() {
         clearInterval(interval);
         interval = undefined;
+
         set({ h: 0, m: 0, s: 0 });
         update((time) => ({ ...time, state: 'stopped' }));
     }
@@ -80,15 +84,21 @@ function timerStore() {
         subscribe,
         start,
         pause,
-        reset
+        reset,
+        stringRepresentation
     };
     // const start = setInterval(() => {}
 }
 
 function projectsStore(timer) {
     const projectsStorage = writable<Map<ProjectName, TimeData>>(new Map());
-
     const { subscribe, set, update } = projectsStorage;
+
+    loadTimeData().then((timeData) => {
+        console.log('loaded time data', timeData);
+        const loadedProjectsTimeData = new Map(Object.entries(timeData)); 
+        set(loadedProjectsTimeData);
+    });
 
     function createProject(name: string) {
         update(projects => {
@@ -107,13 +117,16 @@ function projectsStore(timer) {
     }
 
     function updateProject(name: ProjectName, timeSpent: TimeData) {
+        const newTimeSpent = {...timeSpent, stringRepresentation: `${timeSpent.h.toString().padStart(2, '0')}:${timeSpent.m.toString().padStart(2, '0')}:${timeSpent.s.toString().padStart(2, '0')}`};
         update(projects => {
-            projects.set(name, timeSpent);
+            projects.set(name, newTimeSpent);
             return projects;
         });
 
         saveTimeData(Object.fromEntries(get(projectsStorage)));
     }
+
+    
 
     return {
         subscribe,

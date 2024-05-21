@@ -7,7 +7,15 @@ use std::io::{Read, Write};
 
 #[tauri::command]
 fn save_time_data(data: String) -> Result<(), String> {
-  let path = data_dir().ok_or("Failed to get data directory")?.join("time_data.json");
+  
+
+  let dir_path = data_dir().ok_or("Failed to get data directory")?.join("timestalker");
+  
+  if !dir_path.exists() {
+    std::fs::create_dir_all(&dir_path).map_err(|e| e.to_string())?;
+  }
+
+  let path = data_dir().ok_or("Failed to get data directory")?.join("timestalker").join("time_data.json");
 
   let mut file = OpenOptions::new()
       .create(true)
@@ -22,7 +30,13 @@ fn save_time_data(data: String) -> Result<(), String> {
 
 #[tauri::command]
 fn load_time_data() -> Result<String, String> {
-  let path = data_dir().ok_or("Failed to get data directory")?.join("time_data.json");
+  let dir_path = data_dir().ok_or("Failed to get data directory")?.join("timestalker");
+  
+  if !dir_path.exists() {
+    std::fs::create_dir_all(&dir_path).map_err(|e| e.to_string())?;
+  }
+
+  let path = data_dir().ok_or("Failed to get data directory")?.join("timestalker").join("time_data.json");
 
   let mut file = File::open(path).map_err(|e| e.to_string())?;
   let mut data = String::new();

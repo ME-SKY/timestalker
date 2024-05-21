@@ -1,33 +1,12 @@
 <script lang="ts">
-  // import Greet from "./lib/Greet.svelte";
   import TaskTimer from "./TaskTimer.svelte";
-  // import { invoke } from "@tauri-apps/api/tauri";
-  // import { onMount } from "svelte";
-
-  // async function saveTime() {
-    
-  //   let projects: string[] = [];
-  //   const data = JSON.stringify(projects);
-  //   await invoke("save_time_data", { data });
-  // }
-
-  // async function loadTime() {
-  //   try {
-  //     const data = await invoke<string>("load_time_data");
-  //     const parsed = JSON.parse(data);
-  //     console.log('parsed data', parsed);
-  //   } catch (e) {
-  //     console.error("Failed to load time data", e);
-  //   }
-  // }
-
-  // onMount(() => {
-  //   loadTime();
-  // });
+  import ProjectsList from "./ProjectsList.svelte";
+  import { projects } from "./stores";
 </script>
 
 <main class="container">
   <TaskTimer />
+  <ProjectsList items={$projects} />
 </main>
 
 <style lang="scss">

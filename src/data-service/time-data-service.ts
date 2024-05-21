@@ -5,8 +5,7 @@ const saveTimeData = async (dataValue) => {
     const dataToSave = JSON.stringify(dataValue);
     console.log('saving process starts', dataToSave);
     await invoke('save_time_data', {
-        data: `${dataToSave}`,
-        // 'data': dataToSave
+        data: `${dataToSave}`, // ugly solution
     });
 }
 
