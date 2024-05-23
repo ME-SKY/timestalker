@@ -1,42 +1,32 @@
 <script lang="ts">
-    import { onDestroy } from "svelte";
-    import { timer, projects } from "./stores";
+    import { onDestroy } from 'svelte';
+    import { timer, projects } from './stores';
 
-    let name: string | undefined;
+    // let name: string = ;
 
     const startTimer = () => {
-        if (name !== undefined && name !== "") {
-            projects.createProject(name);
+        if(projectExisted) {
+            projects.resumeProject($timer.timerName);
+        } else {
+            projects.createProject($timer.timerName);
         }
     };
 
     const toggleTimer = () => {
-        if ($timer.state === "running") {
-            if (name) {
+        if ($timer.state === 'running') {
+            if ($timer.timerName) {
                 const newTimeData = timer.pause();
                 console.log('newTimeData', newTimeData);
-                projects.updateProject(name, newTimeData);
+                projects.updateProject($timer.timerName, newTimeData);
             }
         } else {
-            console.log("it should starts");
+            console.log('it should starts');
             startTimer();
         }
     };
 
-    onDestroy(() => {
-        // if (timerId) {
-        //     clearInterval(timerId);
-        // }
-    });
+    $: projectExisted = $timer.timerName && $projects.has($timer.timerName);
 
-    // function startTimer() {
-    //     timerId = setInterval(() => {
-    //         if (time >= 60) {
-    //             console.log("new minute!");
-    //         }
-    //         time += 1;
-    //     }, 1000);
-    // }
 </script>
 
 <div class="timer">
@@ -44,18 +34,15 @@
         <input
             type="text"
             placeholder="project/task you working on"
-            bind:value={name}
+            bind:value={$timer.timerName}
         />
     </div>
     <div class="time-spended">
-        <!-- TODO: move .toString().padStart(2, '0') to string representation in timer store -->
-        <span>{$timer.h.toString().padStart(2, "0")}:</span>
-        <span>{$timer.m.toString().padStart(2, "0")}:</span>
-        <span>{$timer.s.toString().padStart(2, "0")}</span>
+        <div>{$timer.stringRepresentation}</div>
     </div>
     <button
         class="timer-state-swither"
-        disabled={!name}
+        disabled={$timer.timerName === ''}
         on:click={toggleTimer}
         data-timer-state={$timer.state}
         ><svg
@@ -104,6 +91,7 @@
             margin: 0;
             outline: none;
             font-size: 1.2rem;
+            padding: 0;
         }
     }
 
@@ -111,6 +99,12 @@
         flex: 0 0 calc(23% - (2% / 3));
         display: flex;
         align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+
+        & > * {
+            min-height: 50%;
+        }
     }
 
     .task-name,

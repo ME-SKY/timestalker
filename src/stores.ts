@@ -13,24 +13,51 @@ interface TimeData {
 
 interface TimerData extends TimeData {
     timerState: TIMER_STATE,
-    timerName: string,
+    timerName?: string,
 }
 
 function timerStore() {
-    const timerStorage = writable({ h: 0, m: 0, s: 0, state: 'stopped' as TIMER_STATE, timerName: '' as ProjectName });
+    const timerStorage = writable({ h: 0, m: 0, s: 0, stringRepresentation: '00:00:00', state: 'stopped' as TIMER_STATE, timerName: '' as ProjectName });
     const { subscribe, set, update } = timerStorage;
-
-    const stringRepresentation = derived(timerStorage, ($timer) => {
-        const { h, m, s } = $timer;
-        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-    });
 
     let interval: number | undefined = undefined;
 
-
     function start(timerName: string | undefined) {
         update((time) => ({ ...time, state: 'running', timerName: timerName }));
-        
+
+        startInterval();
+    }
+
+    function pause(): TimeData {
+        clearInterval(interval);
+        interval = undefined;
+
+        update((time) => ({ ...time, state: 'paused' }));
+
+        const { h, m, s } = get(timerStorage);
+        return { h, m, s };
+    }
+
+    function resume(timerData?: TimerData | undefined) {
+        if(timerData !== undefined) {
+            reset();
+            update((time) => ({ ...time, state: 'running', h: timerData.h, m: timerData.m, s: timerData.s, stringRepresentation: timerData.stringRepresentation, timerName: timerData.timerName }));
+        } else {
+            update((time) => ({ ...time, state: 'running' }));
+        }
+
+        startInterval();
+    }
+
+    function reset() {
+        clearInterval(interval);
+        interval = undefined;
+
+        // set({ h: 0, m: 0, s: 0 });
+        update((time) => ({ ...time, state: 'stopped', h: 0, m: 0, s: 0, stringRepresentation: '00:00:00', timerName: '' as ProjectName }));
+    }
+
+    function startInterval() {
         interval = setInterval(() => {
             update((time) => {
                 console.log('interval running', time.s);
@@ -45,47 +72,19 @@ function timerStore() {
                 } else {
                     time.s++;
                 }
-
+                time.stringRepresentation = `${time.h.toString().padStart(2, '0')}:${time.m.toString().padStart(2, '0')}:${time.s.toString().padStart(2, '0')}`;
                 return time;
             })
         }, 1000);
     }
 
-    function pause(): TimeData {
-        clearInterval(interval);
-        interval = undefined;
-        
-        update((time) => ({ ...time, state: 'paused' }));
-       
-        const { h, m, s } = get(timerStorage);
-        return { h, m, s };
-    }
-
-    function reset() {
-        clearInterval(interval);
-        interval = undefined;
-
-        set({ h: 0, m: 0, s: 0 });
-        update((time) => ({ ...time, state: 'stopped' }));
-    }
-
-    function initialize() {
-        // const time = await loadTime();
-        // or
-        // loadTime().then((time) => {
-        //     console.log(time);
-        // })
-    }
-
-    // function reset() {
-    //     set({ h: 0, m: 0, s: 0 });
-
     return {
         subscribe,
         start,
         pause,
+        resume,
         reset,
-        stringRepresentation
+        set
     };
     // const start = setInterval(() => {}
 }
@@ -96,13 +95,13 @@ function projectsStore(timer) {
 
     loadTimeData().then((timeData) => {
         console.log('loaded time data', timeData);
-        const loadedProjectsTimeData = new Map(Object.entries(timeData)); 
+        const loadedProjectsTimeData = new Map(Object.entries(timeData));
         set(loadedProjectsTimeData);
     });
 
     function createProject(name: string) {
         update(projects => {
-            projects.set(name, { h: 0, m: 0, s: 0 });
+            projects.set(name, { h: 0, m: 0, s: 0, stringRepresentation: '00:00:00' });
             return projects;
         });
         timer.reset();
@@ -116,8 +115,13 @@ function projectsStore(timer) {
         });
     }
 
+    function resumeProject(name: ProjectName) {
+        const projectToResume = get(projectsStorage).get(name);
+        timer.resume({ timerName: name, ...projectToResume });
+    }
+
     function updateProject(name: ProjectName, timeSpent: TimeData) {
-        const newTimeSpent = {...timeSpent, stringRepresentation: `${timeSpent.h.toString().padStart(2, '0')}:${timeSpent.m.toString().padStart(2, '0')}:${timeSpent.s.toString().padStart(2, '0')}`};
+        const newTimeSpent = { ...timeSpent, stringRepresentation: `${timeSpent.h.toString().padStart(2, '0')}:${timeSpent.m.toString().padStart(2, '0')}:${timeSpent.s.toString().padStart(2, '0')}` };
         update(projects => {
             projects.set(name, newTimeSpent);
             return projects;
@@ -126,13 +130,14 @@ function projectsStore(timer) {
         saveTimeData(Object.fromEntries(get(projectsStorage)));
     }
 
-    
+
 
     return {
         subscribe,
         createProject,
         removeProject,
-        updateProject
+        updateProject,
+        resumeProject
     };
 }
 
