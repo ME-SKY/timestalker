@@ -3,7 +3,7 @@
     import { timer } from './stores/timer';
     import PlayButton from '@assets/play-button.svg?raw';
     import PauseButton from '@assets/pause-button.svg?raw';
-    import Check from '@assets/Check.svelte';
+
     export let items;
 
     const toggleProject = (name: string) => { 

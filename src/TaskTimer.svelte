@@ -33,6 +33,12 @@
         }
     };
 
+    const enterToggleTimer = (e: KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            toggleTimer();
+        }
+    };
+
     const changeInputValue = (e: any) => {
         //dont wanna do fucking typescript-gymnastics-shit
         const newValue = e.target.value;
@@ -86,6 +92,7 @@
     // $: name = $timer.timerName || '';
 </script>
 
+<svelte:window on:keyup={(e) => name !== '' && enterToggleTimer(e)} />
 <div class="timer">
     <div class="task-name">
         <!-- bind:value={$timer.timerName} -->
