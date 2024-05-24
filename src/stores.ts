@@ -53,7 +53,6 @@ function timerStore() {
         clearInterval(interval);
         interval = undefined;
 
-        // set({ h: 0, m: 0, s: 0 });
         update((time) => ({ ...time, state: 'stopped', h: 0, m: 0, s: 0, stringRepresentation: '00:00:00', timerName: '' as ProjectName }));
     }
 
