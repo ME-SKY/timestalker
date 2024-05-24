@@ -1,18 +1,26 @@
 <script lang="ts">
-    import { onDestroy } from 'svelte';
-    import { timer, projects } from './stores';
+    import { onMount, onDestroy } from 'svelte';
+    import { timer, timerName } from './stores/timer';
+    import { projects } from './stores/projects';
+    // import { timer, projects } from './stores/stores';
 
-    // let name: string = ;
+    let name: string = '';
+    let nameInputRef: HTMLInputElement;
+
+    // const unsubscribeFromTimer = timer.subscribe((timerStore) => {
+
+    // });
 
     const startTimer = () => {
-        if(projectExisted) {
-            projects.resumeProject($timer.timerName);
+        if ($projects.has(name)) {
+            projects.resumeProject(name);
         } else {
-            projects.createProject($timer.timerName);
+            projects.createProject(name);
         }
     };
 
     const toggleTimer = () => {
+        console.log('toggle timer');
         if ($timer.state === 'running') {
             if ($timer.timerName) {
                 const newTimeData = timer.pause();
@@ -25,24 +33,79 @@
         }
     };
 
+    const changeInputValue = (e: any) => {
+        //dont wanna do fucking typescript-gymnastics-shit
+        const newValue = e.target.value;
+        console.log('changed e', newValue);
+        name = newValue;
+
+        if ($timer.state === 'running') {
+            projects.updateProject($timer.timerName, timer.pause());
+            // } else {
+            // console.log('$timer.state !== running here')
+            // timer.reset(false);
+            // projects.setProjectToTimer(newValue);
+        }
+
+        if ($timer.stringRepresentation !== '00:00:00') {
+            timer.reset(false);
+        }
+
+        // timer.reset(false);
+
+        // if($projects.has(newValue)) {}
+
+        // timer.reset();
+        // if($timer.state === 'running') {
+        //     projects.updateProject($timer.timerName, timer.pause());
+        //     timer.reset();
+
+        //     if($projects.has(newValue)) {
+        //         projects.setProjectToTimer(newValue);
+        //     }
+        // } else {
+        //     timer.reset();
+        //     if($projects.has(newValue)) {
+        //         projects.setProjectToTimer(newValue);
+        //     }
+        // }
+
+        // if (newValue !== $timer.timerName && $timer.state === 'running') {
+        //     projects.updateProject($timer.timerName, timer.pause());
+        // }
+
+        // if(newValue !== '') {
+        //     timer.update((timerData) => ({...timerData, timerName: newValue}));
+        // }
+    };
+
     $: projectExisted = $timer.timerName && $projects.has($timer.timerName);
 
+    $: name = $timerName;
+
+    // $: name = $timer.timerName || '';
 </script>
 
 <div class="timer">
     <div class="task-name">
+        <!-- bind:value={$timer.timerName} -->
+        <!-- on:input={changeInputValue} -->
         <input
             type="text"
             placeholder="project/task you working on"
-            bind:value={$timer.timerName}
+            value={name}
+            on:input={changeInputValue}
+            bind:this={nameInputRef}
         />
+
+        <!-- <input type="text" hidden bind:this={hiddenInputRef} /> -->
     </div>
     <div class="time-spended">
         <div>{$timer.stringRepresentation}</div>
     </div>
     <button
         class="timer-state-swither"
-        disabled={$timer.timerName === ''}
+        disabled={name === ''}
         on:click={toggleTimer}
         data-timer-state={$timer.state}
         ><svg

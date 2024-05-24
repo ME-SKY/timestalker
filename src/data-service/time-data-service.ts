@@ -12,9 +12,16 @@ const saveTimeData = async (dataValue) => {
 const loadTimeData = async () => {
     try {
         const data = await invoke('load_time_data');
-        const parsed = JSON.parse(data);
-        console.log('parsed', parsed);
-        return parsed;
+
+        if (data) {
+            const parsed = JSON.parse(data);
+            console.log('parsed', parsed);
+            return parsed;
+        } else {
+            console.log('no previously saved data detected');
+            return new Map();
+        }
+
         // set(parsed);
     } catch (e) {
         console.error('Failed to load time data', e);

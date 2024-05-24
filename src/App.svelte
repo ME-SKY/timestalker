@@ -1,10 +1,20 @@
 <script lang="ts">
   import TaskTimer from "./TaskTimer.svelte";
   import ProjectsList from "./ProjectsList.svelte";
-  import { projects } from "./stores";
+  import { projects } from "./stores/projects";
+
+  const toggleTimer = (event: any) => {
+    if (event.repeat) { return }
+    console.log('works')
+    if (event.key === 'Enter') {
+      // Handle the enter key event here
+      console.log('Enter key pressed');
+    }
+  }
 </script>
 
-<main class="container">
+<svelte:window on:keydown={toggleTimer} on:keyup={toggleTimer} />
+<main class="container" >
   <TaskTimer />
   <ProjectsList items={$projects} />
 </main>
