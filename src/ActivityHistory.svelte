@@ -1,6 +1,7 @@
 <script lang="ts">
   import { projects } from './stores/projects';
   import { timer } from './stores/timer';
+  import { activityHistory } from './stores/activity-history';
   import ProjectItem from './components/ProjectItem.svelte';
 
   const toggleProject = (e: CustomEvent) => {
@@ -30,9 +31,9 @@
 
   <div class="last-activity-detailed">
     <div class="last-activity-date-and-score">
-      <h5 class='day'>Yeasterday,&nbsp;</h5>
-      <h5 class='date'>3 Nov 2022</h5>
-      <h5 class='hours-score'>3 h 25 min</h5>
+      <h5 class="day">Yeasterday,&nbsp;</h5>
+      <h5 class="date">3 Nov 2022</h5>
+      <h5 class="hours-score">{$activityHistory.dayScore.h}h {$activityHistory.dayScore.m}m}</h5>
     </div>
 
     <div class="last-activity-projects">
@@ -80,7 +81,7 @@
   }
 
   .last-activity-detailed {
-    border-radius: 5px;
+    border-radius: 16px;
     border: 1px solid black;
   }
 
@@ -89,10 +90,8 @@
     justify-content: left;
     margin: 10px 16px;
 
-
     .hours-score {
       margin-left: auto;
     }
   }
-
 </style>
