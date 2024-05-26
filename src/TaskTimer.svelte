@@ -144,7 +144,7 @@
     .timer {
         background: lightgray;
         height: 12%;
-        padding: 8px;
+        padding: 8px 12px;
         width: 100%;
         display: flex;
         flex-flow: row nowrap;

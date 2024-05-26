@@ -21,7 +21,8 @@
       {
         "title": "timestalker",
         "width": 400,
-        "height": 800
+        "height": 800,
+        "resizable":false
       }
     ],
     "security": {

@@ -24,16 +24,15 @@
 
 <div class="activity-history">
   <div class="last-activity-short-hours-score">
-    <h6 class="this-day-hours-score"></h6>
-    <h6 class="this-week-hours-score"></h6>
+    <h6 class="this-day-hours-score">This day: 4 h 30 min</h6>
+    <h6 class="this-week-hours-score">This week: 7 h 30 min</h6>
   </div>
 
   <div class="last-activity-detailed">
     <div class="last-activity-date-and-score">
-      <h5>Today or Yeasterday with date if it exists</h5>
-      ,
-      <h5>Date like 3 Nov, or 3 Nov 2022 if not in current year</h5>
-      <h5>Score in hourse for this 3.43.21</h5>
+      <h5 class='day'>Yeasterday,&nbsp;</h5>
+      <h5 class='date'>3 Nov 2022</h5>
+      <h5 class='hours-score'>3 h 25 min</h5>
     </div>
 
     <div class="last-activity-projects">
@@ -56,9 +55,12 @@
 
 <style lang="scss">
   .activity-history {
-    padding: 0 20px;
+    background: whitesmoke;
+    border-top-left-radius: 22px;
+    border-top-right-radius: 22px;
+    padding: 1px 20px;
     width: 100%;
-    height: 100%;
+    height: 88%;
   }
 
   .project-block {
@@ -66,6 +68,30 @@
 
     &:last-child {
       border-bottom: none;
+    }
+  }
+
+  .last-activity-short-hours-score {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0px;
+    font-weight: 100;
+  }
+
+  .last-activity-detailed {
+    border-radius: 5px;
+    border: 1px solid black;
+  }
+
+  .last-activity-date-and-score {
+    display: flex;
+    justify-content: left;
+    margin: 10px 16px;
+
+
+    .hours-score {
+      margin-left: auto;
     }
   }
 

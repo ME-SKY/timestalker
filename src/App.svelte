@@ -15,6 +15,7 @@
 <style lang="scss">
   .container {
     height: 100vh;
+    background: lightgray;
   }
 
   .logo.vite:hover {
