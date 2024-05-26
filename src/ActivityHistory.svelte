@@ -21,6 +21,10 @@
       projects.resumeProject(e.detail.name);
     }
   };
+
+  $: {
+    console.log($activityHistory.dayScore);
+  }
 </script>
 
 <div class="activity-history">
@@ -33,7 +37,7 @@
     <div class="last-activity-date-and-score">
       <h5 class="day">Yeasterday,&nbsp;</h5>
       <h5 class="date">3 Nov 2022</h5>
-      <h5 class="hours-score">{$activityHistory.dayScore.h}h {$activityHistory.dayScore.m}m}</h5>
+      <h5 class="hours-score">{$activityHistory.dayScore.h}h {$activityHistory.dayScore.m}m</h5>
     </div>
 
     <div class="last-activity-projects">
