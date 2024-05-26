@@ -6,23 +6,23 @@
 
     export let items;
 
-    const toggleProject = (name: string) => { 
+    const toggleProject = (name: string) => {
         if ($timer.timerName === name) {
-            if ($timer.state === 'running'){
+            if ($timer.state === 'running') {
                 projects.updateProject($timer.timerName, timer.pause());
             } else {
                 projects.resumeProject($timer.timerName);
             }
         } else {
-            if($timer.timerName !== '') {
-                if($projects.has($timer.timerName)) {
+            if ($timer.timerName !== '') {
+                if ($projects.has($timer.timerName)) {
                     projects.updateProject($timer.timerName, timer.pause());
                 }
             }
-            
+
             projects.resumeProject(name);
         }
-     }
+    };
 </script>
 
 <div class="projects-list">
@@ -30,7 +30,10 @@
         <div class="project-list__item">
             <span class="name">{name}</span>
             <span class="time-spent">{timeSpent.stringRepresentation}</span>
-            <button class="continue-project" on:click={() => toggleProject(name)}>
+            <button
+                class="continue-project"
+                on:click={() => toggleProject(name)}
+            >
                 {#if $timer.timerName === name && $timer.state === 'running'}
                     {@html PauseButton}
                 {:else}
@@ -73,8 +76,6 @@
                 display: flex;
                 justify-content: flex-end;
             }
-
-
 
             // &:first-child {
             //     border-top: 1px solid black;

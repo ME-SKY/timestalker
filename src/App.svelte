@@ -2,13 +2,14 @@
   import TaskTimer from "./TaskTimer.svelte";
   import ProjectsList from "./ProjectsList.svelte";
   import { projects } from "./stores/projects";
+  import ActivityHistory from "./ActivityHistory.svelte";
 
 </script>
 
 
 <main class="container" >
   <TaskTimer />
-  <ProjectsList items={$projects} />
+  <ActivityHistory /> 
 </main>
 
 <style lang="scss">
