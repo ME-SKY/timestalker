@@ -4,12 +4,12 @@
   import PauseButton from '@assets/pause-button.svg?raw';
   export let name: string;
   export let timeSpent: string;
-  export let projectState: ProjectState;
+  export let projectState: TimerState;
 
   const dispatch = createEventDispatcher();
 </script>
 
-<div class="project-item">
+<div class="project-item" class:active={projectState === 'running'}>
   <span class="name">{name}</span>
   <span class="time-spent">{timeSpent}</span>
   <button class="toggle-project" on:click={() => dispatch('state-button-click', {name: name})}>
@@ -26,6 +26,14 @@
     padding: 12px;
     display: flex;
     align-items: center;
+
+    &:hover {
+      background: rgba(211, 211, 211, 0.7);
+    }
+
+    &.active {
+      background: rgb(161, 161, 161);
+    }
   }
 
   .name,

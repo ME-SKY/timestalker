@@ -44,6 +44,7 @@ function activityHistoryStore() {
 
       return acc;
     }, new Map<string, Project[]>());
+    console.log('latestDate:', latestDate);
 
     const latestGroup = dateGroups.get(latestDate);
 

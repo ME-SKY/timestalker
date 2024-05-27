@@ -65,6 +65,10 @@
     height: 88%;
   }
 
+  // .last-activity-projects{
+    // 
+  // }
+
   .project-block {
     border-bottom: 1px solid black;
 
@@ -83,6 +87,7 @@
   }
 
   .last-activity-detailed {
+    overflow-y: hidden;
     border-radius: 16px;
     border: 1px solid black;
   }

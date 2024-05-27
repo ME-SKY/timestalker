@@ -1,9 +1,9 @@
 <script lang="ts">
     import { projects } from './stores/projects';
     import { timer, timerName } from './stores/timer';
+    import { TIMER_ACTIONS_BASED_ON_STATE as TIMER_ACTIONS } from './consts';
 
     let name: string = '';
-    let nameInputRef: HTMLInputElement;
 
     const startTimer = () => {
         if ($projects.has(name)) {
@@ -14,15 +14,12 @@
     };
 
     const toggleTimer = () => {
-        console.log('toggle timer');
         if ($timer.state === 'running') {
             if ($timer.timerName) {
                 const newTimeData = timer.pause();
-                console.log('newTimeData', newTimeData);
                 projects.updateProject($timer.timerName, newTimeData);
             }
         } else {
-            console.log('it should starts');
             startTimer();
         }
     };
@@ -51,14 +48,14 @@
 </script>
 
 <svelte:window on:keyup={(e) => name !== '' && enterToggleTimer(e)} />
-<div class="timer">
+<div class="timer" data-timer-state={$timer.state}>
     <div class="task-name">
         <input
             type="text"
             placeholder="project you working on"
             value={name}
             on:input={changeInputValue}
-            bind:this={nameInputRef}
+            autocomplete="off"
         />
     </div>
     <div class="time-spended">
@@ -68,7 +65,7 @@
         class="timer-state-swither"
         disabled={name === ''}
         on:click={toggleTimer}
-        data-timer-state={$timer.state}
+        data-timer-action={TIMER_ACTIONS[$timer.state]}
         ><svg
             width="48"
             height="48"
@@ -96,6 +93,7 @@
 
 <style lang="scss">
     .timer {
+        position: relative;
         background: lightgray;
         height: 12%;
         padding: 8px 18px;
@@ -104,6 +102,18 @@
         flex-flow: row nowrap;
         align-items: center;
         gap: 1%;
+
+        &:after {
+            content: attr(data-timer-state);
+            position: absolute;
+            width: 100%;
+            left: 0px;
+            display: flex;
+            justify-content: center;
+            bottom: 0px;
+            font-size: 0.8rem;
+            color: rgba(0, 0, 0, 0.629);
+        }
     }
 
     .task-name {
@@ -125,15 +135,11 @@
         align-items: center;
         justify-content: center;
         font-size: 1.2rem;
-
-        & > * {
-            min-height: 50%;
-        }
     }
 
     .task-name,
     .time-spended {
-        height: 60%;
+        height: 100%;
     }
 
     .timer-state-swither {
@@ -153,7 +159,7 @@
             justify-content: center;
             bottom: -6px;
             color: rgba(0, 0, 0, 0.629);
-            content: attr(data-timer-state);
+            content: attr(data-timer-action);
         }
     }
 </style>

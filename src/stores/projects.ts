@@ -14,6 +14,7 @@ function projectsStore(timer) {
     function createProject(name: string) {
         update(projects => {
             const currentDate = new Date();
+            console.log('currentDate:', currentDate);
             const newProject = {
                 h: 0,
                 m: 0,
@@ -57,7 +58,9 @@ function projectsStore(timer) {
 
     function updateProject(name: ProjectName, timeSpent: TimeData) {
         const currentDate = new Date();
+        console.log('current date on update:', currentDate);
         const isoString = currentDate.toISOString();
+        console.log('isoString:', isoString);
         const weekDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(currentDate);
 
         const projectData = {
