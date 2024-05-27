@@ -24,10 +24,8 @@
 <style lang="scss">
   .project-item {
     padding: 12px;
-    // height: 52px;
     display: flex;
     align-items: center;
-    // gap: 0.5rem;
   }
 
   .name,
@@ -57,7 +55,5 @@
     outline: none;
     display: flex;
     justify-content: flex-end;
-    // grid-column: 2;
-    // justify-self: end;
   }
 </style>

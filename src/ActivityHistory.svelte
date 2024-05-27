@@ -22,22 +22,19 @@
     }
   };
 
-  $: {
-    console.log($activityHistory.dayScore);
-  }
 </script>
 
 <div class="activity-history">
   <div class="last-activity-short-hours-score">
-    <h6 class="this-day-hours-score">This day: 4 h 30 min</h6>
-    <h6 class="this-week-hours-score">This week: 7 h 30 min</h6>
+    <!-- <h6 class="this-day-hours-score">This day: 4 h 30 min</h6> -->
+    <!-- <h6 class="this-week-hours-score">This week: 7 h 30 min</h6> -->
   </div>
 
   <div class="last-activity-detailed">
     <div class="last-activity-date-and-score">
-      <h5 class="day">Yeasterday,&nbsp;</h5>
-      <h5 class="date">3 Nov 2022</h5>
-      <h5 class="hours-score">{$activityHistory.dayScore.h}h {$activityHistory.dayScore.m}m</h5>
+      <!-- <h5 class="day">{''},&nbsp;</h5> -->
+      <h5 class="date">{$activityHistory.date?.short}</h5>
+      <h5 class="score">{$activityHistory.score.h > 0 ? `${$activityHistory.score.h} h ` : ''}{$activityHistory.score.m} m</h5>
     </div>
 
     <div class="last-activity-projects">
@@ -77,6 +74,7 @@
   }
 
   .last-activity-short-hours-score {
+    min-height: 13px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -94,7 +92,7 @@
     justify-content: left;
     margin: 10px 16px;
 
-    .hours-score {
+    .score {
       margin-left: auto;
     }
   }

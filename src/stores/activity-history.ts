@@ -1,115 +1,80 @@
 import { readable, derived, writable, get } from 'svelte/store';
-// import { loadTimeData, saveTimeData } from '../data-service/time-data-service';
 import { projects } from '../stores/projects';
 
-interface ActivityHistory {
-  date?: string | undefined;
-  dayScore: TimeData;
+interface ActivityHistory { //fix types later
+  date?: any;
+  score: any;
   weekScore?: string | undefined;
   weekDay?: string | undefined;
-  weekDayShort?: string | undefined;
 }
-
-// const activityHistoryStorage = derived(projects, $projects => {
-//   const historyObject: ActivityHistory = {
-//       date: undefined,
-//       dayScore: undefined,
-//       weekScore: undefined,
-//       weekDay: undefined,
-//       weekDayShort: undefined
-//   };
-//   $projects.forEach((project, name) => {
-//       if (new Date(project.lastUpdateDate) > new Date(lastUpdatedObject.lastUpdateDate)) {
-//           lastUpdatedObject.lastUpdateDate = project.lastUpdateDate;
-//       }
-//   });
-//   return lastUpdatedObject;
-// });
 
 function activityHistoryStore() {
   const activityHistoryStorage = derived(projects, $projects => {
+
     const historyObject: ActivityHistory = {
       date: undefined,
-      dayScore: {h: 0, m: 0, s: 0},
-      weekScore: undefined,
-      weekDay: undefined,
-      weekDayShort: undefined
+      score: { h: 0, m: 0, s: 0 },
+      weekScore: undefined, //TODO: add
+      weekDay: undefined, //TODO: add
     };
 
     if ($projects.size === 0) { return historyObject; }
 
     let latestDate = '';
+    let latestWeekDay = '';
     const projs = Array.from($projects.entries());
-    console.log('projs', projs);
+
     const dateGroups = projs.reduce((acc, [name, projectData]) => {
       const date = projectData.lastUpdateDate.split('T')[0];
-
-
       const existingGroup = acc.get(date);
+
       if (existingGroup) {
-        existingGroup.push(projectData);
+        existingGroup.push({ ...projectData, name: name });
       } else {
-        acc.set(date, [projectData]);
+        acc.set(date, [{ ...projectData, name: name }]);
       }
 
       if (latestDate.length) {
         latestDate = new Date(date) > new Date(latestDate) ? date : latestDate;
+        latestWeekDay = projectData.lastUpdateWeekDay > latestWeekDay ? projectData.lastUpdateWeekDay : latestWeekDay;
       } else {
+        latestWeekDay = projectData.lastUpdateWeekDay;
         latestDate = date;
       }
-
 
       return acc;
     }, new Map<string, Project[]>());
 
-    // const latestDate = Array.from(dateGroups.keys()).reduce<string>((acc, date) => {
-    //     return new Date(date) > new Date(acc) ? date : acc;
-    // }, dateGroups.keys().next().value);
-
-    dateGroups.forEach((group, date) => {
-      console.log('date from DateGROUPS', date);
-    })
     const latestGroup = dateGroups.get(latestDate);
 
-    if (latestGroup) {
-      console.log('latestGroup', latestGroup);
-      // historyObject.date = latestDate;
-      // historyObject.dayScore = latestGroup.reduce((acc, project) => {
-      // acc.s += project.s;
-      // acc.m += project.m;
-    }
-    console.log('latestDate', latestDate);
-    // 
+    const calculatedScore = latestGroup.reduce((acc, project) => {
+      acc.s += project.s;
+      acc.m += project.m;
 
-    const calculatedDayScore = latestGroup.reduce((acc, project) => {
-       acc.s += project.s;
-       acc.m += project.m;
+      if (acc.s >= 60) {
+        acc.s = acc.s - 60;
+        acc.m += 1;
+      }
 
-       if (acc.s >= 60) {
-          acc.s = acc.s - 60;
-          acc.m += 1;
-       }
+      if (acc.m >= 60) {
+        acc.m = acc.m - 60;
+        acc.h += 1;
+      }
 
-       if (acc.m >= 60) {
-          acc.m = acc.m - 60;
-          acc.h += 1;
-       }
-        // acc.h += project.h;
-        // acc.m += project.m;
-        // acc.s += project.s;
-        return {h: acc.h, m: acc.m, s: acc.s};
+      return { h: acc.h, m: acc.m, s: acc.s };
     })
 
-    console.log('calculatedDayScore', calculatedDayScore);
+    const latestDateParts = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric' }).formatToParts(new Date(latestDate));
+    const formattedDate = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short' }).format(new Date(latestDate));
 
-    historyObject.dayScore = calculatedDayScore;
-
-
-    // const latestProject = latestGroup && latestGroup.length > 0 ? latestGroup[0] : undefined;
-
-    // if (latestProject) {
-    //     historyObject.lastUpdateDate = latestProject.lastUpdateDate;
-    // }
+    historyObject.score = {
+      ...calculatedScore
+    };
+    historyObject.date = {
+      itselfString: latestDate,
+      short: `${latestDateParts[2].value} ${latestDateParts[0].value}`
+    };
+    historyObject.weekDay = latestWeekDay;
 
     return historyObject;
   });

@@ -7,14 +7,22 @@ function projectsStore(timer) {
     const { subscribe, set, update } = projectsStorage;
 
     loadTimeData().then((timeData) => {
-        console.log('loaded time data', timeData);
         const loadedProjectsTimeData = new Map(Object.entries(timeData));
         set(loadedProjectsTimeData);
     });
 
     function createProject(name: string) {
         update(projects => {
-            projects.set(name, { h: 0, m: 0, s: 0, stringRepresentation: '00:00:00' });
+            const currentDate = new Date();
+            const newProject = {
+                h: 0,
+                m: 0,
+                s: 0,
+                stringRepresentation: '00:00:00',
+                lastUpdateDate: currentDate.toISOString(),
+                lastUpdateWeekDay: currentDate.toLocaleDateString('en-US', { weekday: 'long' }),
+            }
+            projects.set(name, newProject);
             return projects;
         });
         timer.reset();
@@ -43,7 +51,6 @@ function projectsStore(timer) {
     }
 
     function resumeProject(name: ProjectName) {
-        console.log('resume Project starts')
         const projectToResume = get(projectsStorage).get(name);
         timer.resume({ timerName: name, ...projectToResume });
     }
@@ -51,13 +58,12 @@ function projectsStore(timer) {
     function updateProject(name: ProjectName, timeSpent: TimeData) {
         const currentDate = new Date();
         const isoString = currentDate.toISOString();
-        console.log('iso string on save:', isoString);
         const weekDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(currentDate);
 
-        console.log('weekday on save:', weekDay);
-        const projectData = { ...timeSpent, 
-            stringRepresentation: `${timeSpent.h.toString().padStart(2, '0')}:${timeSpent.m.toString().padStart(2, '0')}:${timeSpent.s.toString().padStart(2, '0')}`, 
-            lastUpdateDate: isoString, 
+        const projectData = {
+            ...timeSpent,
+            stringRepresentation: `${timeSpent.h.toString().padStart(2, '0')}:${timeSpent.m.toString().padStart(2, '0')}:${timeSpent.s.toString().padStart(2, '0')}`,
+            lastUpdateDate: isoString,
             lastUpdateWeekDay: weekDay
         };
 

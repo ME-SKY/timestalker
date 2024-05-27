@@ -17,6 +17,7 @@ interface TimerData extends TimeData {
 }
 
 interface ProjectData extends TimeData {
+    name?: string;
     lastUpdateDate?: string;
     lastUpdateWeekDay?: WeekDay;
 }

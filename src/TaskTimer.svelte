@@ -1,15 +1,9 @@
 <script lang="ts">
-    import { onMount, onDestroy } from 'svelte';
-    import { timer, timerName } from './stores/timer';
     import { projects } from './stores/projects';
-    // import { timer, projects } from './stores/stores';
+    import { timer, timerName } from './stores/timer';
 
     let name: string = '';
     let nameInputRef: HTMLInputElement;
-
-    // const unsubscribeFromTimer = timer.subscribe((timerStore) => {
-
-    // });
 
     const startTimer = () => {
         if ($projects.has(name)) {
@@ -40,72 +34,32 @@
     };
 
     const changeInputValue = (e: any) => {
-        //dont wanna do fucking typescript-gymnastics-shit
         const newValue = e.target.value;
-        console.log('changed e', newValue);
         name = newValue;
 
         if ($timer.state === 'running') {
             projects.updateProject($timer.timerName, timer.pause());
-            // } else {
-            // console.log('$timer.state !== running here')
-            // timer.reset(false);
-            // projects.setProjectToTimer(newValue);
         }
 
         if ($timer.stringRepresentation !== '00:00:00') {
             timer.reset(false);
         }
-
-        // timer.reset(false);
-
-        // if($projects.has(newValue)) {}
-
-        // timer.reset();
-        // if($timer.state === 'running') {
-        //     projects.updateProject($timer.timerName, timer.pause());
-        //     timer.reset();
-
-        //     if($projects.has(newValue)) {
-        //         projects.setProjectToTimer(newValue);
-        //     }
-        // } else {
-        //     timer.reset();
-        //     if($projects.has(newValue)) {
-        //         projects.setProjectToTimer(newValue);
-        //     }
-        // }
-
-        // if (newValue !== $timer.timerName && $timer.state === 'running') {
-        //     projects.updateProject($timer.timerName, timer.pause());
-        // }
-
-        // if(newValue !== '') {
-        //     timer.update((timerData) => ({...timerData, timerName: newValue}));
-        // }
     };
 
-    $: projectExisted = $timer.timerName && $projects.has($timer.timerName);
-
     $: name = $timerName;
-
-    // $: name = $timer.timerName || '';
+    
 </script>
 
 <svelte:window on:keyup={(e) => name !== '' && enterToggleTimer(e)} />
 <div class="timer">
     <div class="task-name">
-        <!-- bind:value={$timer.timerName} -->
-        <!-- on:input={changeInputValue} -->
         <input
             type="text"
-            placeholder="project/task you working on"
+            placeholder="project you working on"
             value={name}
             on:input={changeInputValue}
             bind:this={nameInputRef}
         />
-
-        <!-- <input type="text" hidden bind:this={hiddenInputRef} /> -->
     </div>
     <div class="time-spended">
         <div>{$timer.stringRepresentation}</div>
@@ -199,20 +153,7 @@
             justify-content: center;
             bottom: -6px;
             color: rgba(0, 0, 0, 0.629);
-            // content: attr(data-timer-state); TODO: return it
             content: attr(data-timer-state);
         }
     }
-
-    // .timer-state-swither[data-timer-state='running']::after {
-    //     content: "STOP";
-    // }
-
-    // .timer-state-swither[data-timer-state='not-started-yet']::after {
-    //     content: "START";
-    // }
-
-    // .timer-state-swither[data-timer-state='paused']::after {
-    //     content: "CONTINUE";
-    // }
 </style>

@@ -1,8 +1,6 @@
 <script lang="ts">
-  import TaskTimer from "./TaskTimer.svelte";
-  import ProjectsList from "./ProjectsList.svelte";
-  import { projects } from "./stores/projects";
   import ActivityHistory from "./ActivityHistory.svelte";
+  import TaskTimer from "./TaskTimer.svelte";
 
 </script>
 

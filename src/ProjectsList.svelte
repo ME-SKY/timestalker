@@ -48,24 +48,15 @@
     .projects-list {
         width: 100%;
         margin-top: 10px;
-        // .projects-list {
-        //     width: 100%;
-        //     // list-style: none;
-        //     padding: 0;
-        // border-collapse: collapse;
-
+       
         .project-list__item {
-            // border-collapse: collapse;
             padding: 0 20px;
-            // margin: 0 20px;
             height: 52px;
             display: flex;
             align-items: center;
-            // justify-content: space-between;
             border-bottom: 1px solid black;
             border-right: none;
             border-left: none;
-            // border-top: 1px solid transparent;
 
             .name {
                 flex: 0 0 65%;
@@ -76,13 +67,7 @@
                 display: flex;
                 justify-content: flex-end;
             }
-
-            // &:first-child {
-            //     border-top: 1px solid black;
-            // }
-
             button.continue-project {
-                // flex: 0 0 15%;
                 margin: 0;
                 margin-left: auto;
                 padding: 0;
@@ -92,17 +77,7 @@
                 outline: none;
                 display: flex;
                 justify-content: flex-end;
-
-                // max-width: 42px;
-                // max-height: 42px;
             }
-
-            // ::las
         }
-
-        // li + li {
-        //     border-top: none;
-        // }
-        // }
     }
 </style>

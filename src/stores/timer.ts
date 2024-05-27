@@ -23,7 +23,7 @@ function timerStore() {
     }
 
     function resume(timerData?: TimerData | undefined) {
-        if(timerData !== undefined) {
+        if (timerData !== undefined) {
             reset();
             update((time) => ({ ...time, state: 'running', h: timerData.h, m: timerData.m, s: timerData.s, stringRepresentation: timerData.stringRepresentation, timerName: timerData.timerName }));
         } else {
@@ -39,10 +39,10 @@ function timerStore() {
             interval = undefined;
         }
 
-        const defaultTimerSetting = {state: 'stopped', h: 0, m: 0, s: 0, stringRepresentation: '00:00:00'};
+        const defaultTimerSetting = { state: 'stopped', h: 0, m: 0, s: 0, stringRepresentation: '00:00:00' };
 
-        if(triggerName) {
-          defaultTimerSetting.timerName = '';
+        if (triggerName) {
+            defaultTimerSetting.timerName = '';
         }
 
         update((time) => ({ ...time, ...defaultTimerSetting }));
