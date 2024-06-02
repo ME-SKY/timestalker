@@ -67,6 +67,7 @@
     padding: 0px 20px;
     width: 100%;
     height: calc(88% - 12px);
+    max-height: calc(88% - 12px);
   }
 
   // .last-activity-projects{

@@ -25,7 +25,7 @@
 </div>
 
 <style lang="scss">
-  @keyframes blink {
+  @keyframes blink { //TODO: add blink one time animation for active project, - when he become active
     0% {
       left: -100%;
     }

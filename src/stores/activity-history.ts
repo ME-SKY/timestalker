@@ -25,32 +25,36 @@ function activityHistoryStore() {
     const projs = Array.from($projects.entries());
 
     const dateGroups = projs.reduce((acc, [name, projectData]) => {
-      const date = projectData.lastUpdateDate.split('T')[0];
-      const existingGroup = acc.get(date);
+      const date = new Date(projectData.lastUpdateDate);
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+      const localeDateArr = date.toLocaleDateString(undefined, options).replace(/\//g, '-').split('-');
+      const localeDateString = `${localeDateArr[2]}-${localeDateArr[1]}-${localeDateArr[0]}`;
+
+      const existingGroup = acc.get(localeDateString);
 
       if (existingGroup) {
         existingGroup.push({ ...projectData, name: name });
       } else {
-        acc.set(date, [{ ...projectData, name: name }]);
+        acc.set(localeDateString, [{ ...projectData, name: name }]);
       }
 
       if (latestDate.length) {
-        latestDate = new Date(date) > new Date(latestDate) ? date : latestDate;
+        latestDate = new Date(localeDateString) > new Date(latestDate) ? localeDateString : latestDate;
         latestWeekDay = projectData.lastUpdateWeekDay > latestWeekDay ? projectData.lastUpdateWeekDay : latestWeekDay;
       } else {
         latestWeekDay = projectData.lastUpdateWeekDay;
-        latestDate = date;
+        latestDate = localeDateString;
       }
 
       return acc;
     }, new Map<string, Project[]>());
-    console.log('latestDate:', latestDate);
 
     const latestGroup = dateGroups.get(latestDate);
 
     const calculatedScore = latestGroup.reduce((acc, project) => {
       acc.s += project.s;
       acc.m += project.m;
+      acc.h += project.h;
 
       if (acc.s >= 60) {
         acc.s = acc.s - 60;
