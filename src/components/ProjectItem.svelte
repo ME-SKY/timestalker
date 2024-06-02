@@ -12,7 +12,10 @@
 <div class="project-item" class:active={projectState === 'running'}>
   <span class="name">{name}</span>
   <span class="time-spent">{timeSpent}</span>
-  <button class="toggle-project" on:click={() => dispatch('state-button-click', {name: name})}>
+  <button
+    class="toggle-project"
+    on:click={() => dispatch('state-button-click', { name: name })}
+  >
     {#if projectState === 'running'}
       {@html PauseButton}
     {:else}
@@ -22,8 +25,17 @@
 </div>
 
 <style lang="scss">
+  @keyframes blink {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
   .project-item {
-    padding: 12px;
+    font-size: 1.4rem;
+    padding: 18px 12px;
     display: flex;
     align-items: center;
 
@@ -32,6 +44,8 @@
     }
 
     &.active {
+      // background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+      // animation: blink 1.3s ease-in-out forwards;
       background: rgb(161, 161, 161);
     }
   }

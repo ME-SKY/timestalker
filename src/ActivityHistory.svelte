@@ -21,7 +21,6 @@
       projects.resumeProject(e.detail.name);
     }
   };
-
 </script>
 
 <div class="activity-history">
@@ -34,7 +33,11 @@
     <div class="last-activity-date-and-score">
       <!-- <h5 class="day">{''},&nbsp;</h5> -->
       <h5 class="date">{$activityHistory.date?.short}</h5>
-      <h5 class="score">{$activityHistory.score.h > 0 ? `${$activityHistory.score.h} h ` : ''}{$activityHistory.score.m} m</h5>
+      <h5 class="score">
+        {$activityHistory.score.h > 0
+          ? `${$activityHistory.score.h} h `
+          : ''}{$activityHistory.score.m} m
+      </h5>
     </div>
 
     <div class="last-activity-projects">
@@ -57,16 +60,17 @@
 
 <style lang="scss">
   .activity-history {
-    background: whitesmoke;
-    border-top-left-radius: 22px;
-    border-top-right-radius: 22px;
-    padding: 1px 20px;
+    position: absolute;
+    background: transparent;
+    // border-top-left-radius: 22px;
+    // border-top-right-radius: 22px;
+    padding: 0px 20px;
     width: 100%;
-    height: 88%;
+    height: calc(88% - 12px);
   }
 
   // .last-activity-projects{
-    // 
+  //
   // }
 
   .project-block {
@@ -78,18 +82,25 @@
   }
 
   .last-activity-short-hours-score {
-    min-height: 13px;
+    min-height: 6px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 10px 0px;
+    // margin: 10px 0px;
     font-weight: 100;
   }
 
   .last-activity-detailed {
+    background: whitesmoke;
     overflow-y: hidden;
     border-radius: 16px;
-    border: 1px solid black;
+    border: 1px solid transparent;
+
+    // transition: box-shadow 0.3s ease-in-out;
+
+    // &:hover {
+    box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.165), 0px 0px 2px 0px rgba(0, 0, 0, 0.26), 0px 0px 1px 0px rgba(0, 0, 0, 0.43);
+    // }
   }
 
   .last-activity-date-and-score {
@@ -99,6 +110,11 @@
 
     .score {
       margin-left: auto;
+    }
+
+    .score,
+    .date {
+      font-size: 1.1rem;
     }
   }
 </style>
