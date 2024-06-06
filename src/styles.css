@@ -5,6 +5,11 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'RobotoMono';
+  src: url('./fonts/RobotoMono-VariableFont_wght') format('truetype');
+}
+
 html, body {
   font-family: 'Jersey10-Regular', sans-serif;
   height: 100%;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { projects } from './stores/projects';
+  import { projects, projectsArray } from './stores/projects';
   import { timer } from './stores/timer';
   import { activityHistory } from './stores/activity-history';
   import ProjectItem from './components/ProjectItem.svelte';
@@ -41,13 +41,13 @@
     </div>
 
     <div class="last-activity-projects">
-      {#each $projects as [name, timeSpent]}
-        <div class="project-block">
+      {#each $projectsArray as project}
+        <div class="project-block" class:active={$timer.timerName === project.name}>
           <ProjectItem
             on:state-button-click={toggleProject}
-            {name}
-            timeSpent={timeSpent.stringRepresentation}
-            projectState={$timer.timerName === name &&
+            name = {project.name || ''}
+            timeSpent={project.stringRepresentation || ''}
+            projectState={$timer.timerName === project.name &&
             $timer.state === 'running'
               ? 'running'
               : 'paused'}
@@ -71,14 +71,25 @@
   }
 
   // .last-activity-projects{
-  //
+    
   // }
 
   .project-block {
-    border-bottom: 1px solid black;
+    border-width: 0px 0px 1px 0px;
+    border-style: solid;
+    border-bottom-color: black;
+    // border-top-color: transparent;
+    // border-left-color: transparent;
+    // border-right-color: transparent;
 
     &:last-child {
-      border-bottom: none;
+      border-bottom-color: transparent;
+    }
+
+    &.active {
+      // border-top-color: transparent;
+      // border-left-color: black;
+      // border-right-color: black;
     }
   }
 
@@ -92,15 +103,19 @@
   }
 
   .last-activity-detailed {
+    max-height: calc(100% - 18px);
     background: whitesmoke;
     overflow-y: hidden;
     border-radius: 16px;
-    border: 1px solid transparent;
+    // border: 1px solid transparent;
 
     // transition: box-shadow 0.3s ease-in-out;
 
     // &:hover {
-    box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.165), 0px 0px 2px 0px rgba(0, 0, 0, 0.26), 0px 0px 1px 0px rgba(0, 0, 0, 0.43);
+    box-shadow:
+      0px 0px 4px 2px rgba(0, 0, 0, 0.165),
+      0px 0px 2px 0px rgba(0, 0, 0, 0.26),
+      0px 0px 1px 0px rgba(0, 0, 0, 0.43);
     // }
   }
 

@@ -91,3 +91,9 @@ function projectsStore(timer) {
 }
 
 export const projects = projectsStore(timer);
+
+export const projectsArray = derived(projects, $projects =>  {
+    console.log($projects.entries());
+    const projectsArr: ProjectData[] = Array.from($projects.entries()).map(([name, project]) => ({ name, ...project }));
+    return projectsArr.reverse();
+});

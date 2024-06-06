@@ -26,27 +26,46 @@
 
 <style lang="scss">
   @keyframes blink { //TODO: add blink one time animation for active project, - when he become active
-    0% {
-      left: -100%;
+    // 0% {
+      // background: rgba(0,0,0,1);
+      // left: -100%;
+    // }
+    50% {
+  //     background:  linear-gradient(
+	// 	45deg,
+	// 	#fb0094,
+	// 	#0000ff,
+	// 	#00ff00,
+	// 	#ffff00,
+	// 	#ff0000,
+	// 	#fb0094,
+	// 	#0000ff,
+	// 	#00ff00,
+	// 	#ffff00,
+	// 	#ff0000
+	// );;
     }
-    100% {
-      left: 100%;
-    }
+    // 100% {
+      // background: rgba(0,0,0,0.5);
+      // left: 100%;
+    // }
   }
   .project-item {
     font-size: 1.4rem;
     padding: 18px 12px;
     display: flex;
     align-items: center;
+    // transition: background-position 1s linear;
 
     &:hover {
-      background: rgba(211, 211, 211, 0.7);
+      background: rgba(211, 211, 211, 0.5);
     }
 
     &.active {
+      // background-color: rgba(0, 0, 0, 0.5);
       // background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-      // animation: blink 1.3s ease-in-out forwards;
-      background: rgb(161, 161, 161);
+      animation: blink 0.3s ease forwards;
+      background: lightgray;
     }
   }
 
