@@ -62,44 +62,74 @@ function projectsStore(timer) {
 
     function updateProject(name: ProjectName, timeSpent: TimeData) {
         const existedProject = get(projectsStorage).get(name);
+
         const currentDate = new Date();
         const dateStringForPeriod = getDateString(currentDate);
+        const isoString = currentDate.toISOString();
+
+        const weekDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(currentDate);
+        let newPeriods = new Map<Period>();
+        const totalTimespent = { h: 0, m: 0, s: 0 };
 
         if (existedProject) {
-            const existingPeriods = existedProject.periodsByDate;
+            newPeriods = existedProject.periodsByDate;
+            const existedPeriod = newPeriods.get(dateStringForPeriod);
+            
+            totalTimespent.h = existedProject.h;
+            totalTimespent.m = existedProject.m;
+            totalTimespent.s = existedProject.s;
 
-            if (existingPeriods.has(dateStringForPeriod)) {
-                //TODO: add timespend to this period
+            if (existedPeriod) {
+                existedPeriod.h += timeSpent.h;
+                existedPeriod.m += timeSpent.m;
+                existedPeriod.s += timeSpent.s;
+
+                if (existedPeriod.s >= 60) {
+                    existedPeriod.s = existedPeriod.s - 60;
+                    existedPeriod.m += 1;
+                }
+
+                if (existedPeriod.m >= 60) {
+                    existedPeriod.m = existedPeriod.m - 60;
+                    existedPeriod.h += 1;
+                }
+
+
             } else {
-                //TODO: create new period
+                newPeriods.set(dateStringForPeriod, timeSpent);
             }
-
-
-            //TODO: change whole(total) Time and update periods
         } else {
-
-            console.log('current date on update:', currentDate);
-            const isoString = currentDate.toISOString();
-            console.log('isoString:', isoString);
-            const weekDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(currentDate);
-
-            const periods = new Map([[dateStringForPeriod, timeSpent]]);
-            const projectData = {
-                ...timeSpent,
-                stringRepresentation: `${timeSpent.h.toString().padStart(2, '0')}:${timeSpent.m.toString().padStart(2, '0')}:${timeSpent.s.toString().padStart(2, '0')}`,
-                lastUpdateDate: isoString,
-                lastUpdateWeekDay: weekDay,
-                periodsByDate: periods,
-            };
-
-            update(projects => {
-                projects.set(name, projectData);
-                return projects;
-            });
-
-            saveTimeData(Object.fromEntries(get(projectsStorage)));
+            newPeriods = new Map([[dateStringForPeriod, timeSpent]]);
         }
 
+        totalTimespent.h += timeSpent.h;
+        totalTimespent.m += timeSpent.m;
+        totalTimespent.s += timeSpent.s;
+
+        if (totalTimespent.s >= 60) {
+            totalTimespent.s = totalTimespent.s - 60;
+            totalTimespent.m += 1;
+        }
+
+        if (totalTimespent.m >= 60) {
+            totalTimespent.m = totalTimespent.m - 60;
+            totalTimespent.h += 1;
+        }
+
+        const projectData = {
+            ...totalTimespent,
+            stringRepresentation: `${totalTimespent.h.toString().padStart(2, '0')}:${totalTimespent.m.toString().padStart(2, '0')}:${totalTimespent.s.toString().padStart(2, '0')}`,
+            lastUpdateDate: isoString,
+            lastUpdateWeekDay: weekDay,
+            periodsByDate: newPeriods,
+        };
+
+        update(projects => {
+            projects.set(name, projectData);
+            return projects;
+        });
+
+        saveTimeData(Object.fromEntries(get(projectsStorage)));
     }
 
 
