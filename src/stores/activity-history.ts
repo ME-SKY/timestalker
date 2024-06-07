@@ -1,5 +1,6 @@
 import { readable, derived, writable, get } from 'svelte/store';
 import { projects } from '../stores/projects';
+import { getDateString } from '@/helpers';
 
 interface ActivityHistory { //fix types later
   date?: any;
@@ -26,9 +27,7 @@ function activityHistoryStore() {
 
     const dateGroups = projs.reduce((acc, [name, projectData]) => {
       const date = new Date(projectData.lastUpdateDate);
-      const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-      const localeDateArr = date.toLocaleDateString(undefined, options).replace(/\//g, '-').split('-');
-      const localeDateString = `${localeDateArr[2]}-${localeDateArr[1]}-${localeDateArr[0]}`;
+      const localeDateString = getDateString(date);
 
       const existingGroup = acc.get(localeDateString);
 
@@ -71,6 +70,10 @@ function activityHistoryStore() {
 
     const latestDateParts = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric' }).formatToParts(new Date(latestDate));
     const formattedDate = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short' }).format(new Date(latestDate));
+
+    console.log('formattedDate', formattedDate);
+    console.log('latestDate', latestDate);
+    console.log('latestGroup', latestGroup);
 
     historyObject.score = {
       ...calculatedScore

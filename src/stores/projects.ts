@@ -1,6 +1,8 @@
 import { readable, derived, writable, get } from 'svelte/store';
 import { loadTimeData, saveTimeData } from '../data-service/time-data-service';
 import { timer } from '../stores/timer';
+import { getDateString } from '@/helpers';
+
 
 function projectsStore(timer) {
     const projectsStorage = writable<Map<Project>>(new Map());
@@ -15,15 +17,17 @@ function projectsStore(timer) {
         update(projects => {
             const currentDate = new Date();
             console.log('currentDate:', currentDate);
-            const newProject = {
+            const newProject: ProjectData = {
                 h: 0,
                 m: 0,
                 s: 0,
                 stringRepresentation: '00:00:00',
                 lastUpdateDate: currentDate.toISOString(),
                 lastUpdateWeekDay: currentDate.toLocaleDateString('en-US', { weekday: 'long' }),
+                periodsByDate: new Map()
             }
             projects.set(name, newProject);
+
             return projects;
         });
         timer.reset();
@@ -57,25 +61,45 @@ function projectsStore(timer) {
     }
 
     function updateProject(name: ProjectName, timeSpent: TimeData) {
+        const existedProject = get(projectsStorage).get(name);
         const currentDate = new Date();
-        console.log('current date on update:', currentDate);
-        const isoString = currentDate.toISOString();
-        console.log('isoString:', isoString);
-        const weekDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(currentDate);
+        const dateStringForPeriod = getDateString(currentDate);
 
-        const projectData = {
-            ...timeSpent,
-            stringRepresentation: `${timeSpent.h.toString().padStart(2, '0')}:${timeSpent.m.toString().padStart(2, '0')}:${timeSpent.s.toString().padStart(2, '0')}`,
-            lastUpdateDate: isoString,
-            lastUpdateWeekDay: weekDay
-        };
+        if (existedProject) {
+            const existingPeriods = existedProject.periodsByDate;
 
-        update(projects => {
-            projects.set(name, projectData);
-            return projects;
-        });
+            if (existingPeriods.has(dateStringForPeriod)) {
+                //TODO: add timespend to this period
+            } else {
+                //TODO: create new period
+            }
 
-        saveTimeData(Object.fromEntries(get(projectsStorage)));
+
+            //TODO: change whole(total) Time and update periods
+        } else {
+
+            console.log('current date on update:', currentDate);
+            const isoString = currentDate.toISOString();
+            console.log('isoString:', isoString);
+            const weekDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(currentDate);
+
+            const periods = new Map([[dateStringForPeriod, timeSpent]]);
+            const projectData = {
+                ...timeSpent,
+                stringRepresentation: `${timeSpent.h.toString().padStart(2, '0')}:${timeSpent.m.toString().padStart(2, '0')}:${timeSpent.s.toString().padStart(2, '0')}`,
+                lastUpdateDate: isoString,
+                lastUpdateWeekDay: weekDay,
+                periodsByDate: periods,
+            };
+
+            update(projects => {
+                projects.set(name, projectData);
+                return projects;
+            });
+
+            saveTimeData(Object.fromEntries(get(projectsStorage)));
+        }
+
     }
 
 
@@ -92,7 +116,7 @@ function projectsStore(timer) {
 
 export const projects = projectsStore(timer);
 
-export const projectsArray = derived(projects, $projects =>  {
+export const projectsArray = derived(projects, $projects => {
     console.log($projects.entries());
     const projectsArr: ProjectData[] = Array.from($projects.entries()).map(([name, project]) => ({ name, ...project }));
     return projectsArr.reverse();
