@@ -20,7 +20,7 @@ interface TimerData extends TimeData {
     timerName?: string,
 }
 
-type Period = Record<DateSpan, TimerData>
+type Period = Record<DateSpan, TimeData>
 
 interface ProjectData extends TimeData {
     periodsByDate: Map<Period>,

@@ -1,7 +1,7 @@
 import { readable, derived, writable, get } from 'svelte/store';
 import { loadTimeData, saveTimeData } from '../data-service/time-data-service';
 import { timer } from '../stores/timer';
-import { getDateString } from '@/helpers';
+import { getDateString, mergeTimeData } from '@/helpers';
 
 
 function projectsStore(timer) {
@@ -79,42 +79,13 @@ function projectsStore(timer) {
             totalTimespent.m = existedProject.m;
             totalTimespent.s = existedProject.s;
 
-            if (existedPeriod) {
-                existedPeriod.h += timeSpent.h;
-                existedPeriod.m += timeSpent.m;
-                existedPeriod.s += timeSpent.s;
+            const periodTimeSpent = existedPeriod ? mergeTimeData(existedPeriod, timeSpent) : timeSpent;
+            newPeriods.set(dateStringForPeriod, periodTimeSpent);
+        } else { //TODO: think how to refactor it:
+            newPeriods.set(dateStringForPeriod, timeSpent);
+        } 
 
-                if (existedPeriod.s >= 60) {
-                    existedPeriod.s = existedPeriod.s - 60;
-                    existedPeriod.m += 1;
-                }
-
-                if (existedPeriod.m >= 60) {
-                    existedPeriod.m = existedPeriod.m - 60;
-                    existedPeriod.h += 1;
-                }
-
-
-            } else {
-                newPeriods.set(dateStringForPeriod, timeSpent);
-            }
-        } else {
-            newPeriods = new Map([[dateStringForPeriod, timeSpent]]);
-        }
-
-        totalTimespent.h += timeSpent.h;
-        totalTimespent.m += timeSpent.m;
-        totalTimespent.s += timeSpent.s;
-
-        if (totalTimespent.s >= 60) {
-            totalTimespent.s = totalTimespent.s - 60;
-            totalTimespent.m += 1;
-        }
-
-        if (totalTimespent.m >= 60) {
-            totalTimespent.m = totalTimespent.m - 60;
-            totalTimespent.h += 1;
-        }
+        totalTimespent = mergeTimeData(totalTimespent, timeSpent);
 
         const projectData = {
             ...totalTimespent,
