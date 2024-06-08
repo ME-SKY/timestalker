@@ -8,7 +8,7 @@ function projectsStore(timer) {
     const projectsStorage = writable<Map<Project>>(new Map());
     const { subscribe, set, update } = projectsStorage;
 
-    loadTimeData().then((timeData) => {
+    loadTimeData().then((timeData) => { //TODO: fix deserialization/restore nested Objects periodsByDate to Maps
         const loadedProjectsTimeData = new Map(Object.entries(timeData));
         set(loadedProjectsTimeData);
     });
@@ -114,7 +114,12 @@ function projectsStore(timer) {
             return projects;
         });
 
-        saveTimeData(Object.fromEntries(get(projectsStorage)));
+        console.log('pedriods by data before save:');
+
+        const data = Object.fromEntries(get(projectsStorage))
+        console.log(data[name].periodsByDate);
+
+        saveTimeData(data);
     }
 
     function recalculateTimeSpent(periods: Map<Period>): TimeData {

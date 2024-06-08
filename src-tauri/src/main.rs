@@ -4,6 +4,7 @@
 use tauri::api::path::data_dir;
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
+use serde_json::Value;
 
 #[tauri::command]
 fn save_time_data(data: String) -> Result<(), String> {
@@ -17,6 +18,9 @@ fn save_time_data(data: String) -> Result<(), String> {
 
   let path = data_dir().ok_or("Failed to get data directory")?.join("timestalker").join("time_data.json");
 
+  let parsed_data: Value = serde_json::from_str(&data).map_err(|e| e.to_string())?;
+  let formatted_data = serde_json::to_string_pretty(&parsed_data).map_err(|e| e.to_string())?;
+
   let mut file = OpenOptions::new()
       .create(true)
       .write(true)
@@ -24,7 +28,7 @@ fn save_time_data(data: String) -> Result<(), String> {
       .open(path)
       .map_err(|e| e.to_string())?;
 
-  file.write_all(data.as_bytes()).map_err(|e| e.to_string())?;
+  file.write_all(formatted_data.as_bytes()).map_err(|e| e.to_string())?;
   Ok(())
 }
 
