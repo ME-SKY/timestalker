@@ -1,7 +1,7 @@
 import { readable, derived, writable, get } from 'svelte/store';
 import { loadTimeData, saveTimeData } from '../data-service/time-data-service';
 import { timer } from '../stores/timer';
-import { getDateString, mergeTimeData } from '@/helpers';
+import { getDateString, mergeTimeData, subtractTimeData } from '@/helpers';
 
 
 function projectsStore(timer) {
@@ -57,10 +57,17 @@ function projectsStore(timer) {
 
     function resumeProject(name: ProjectName) {
         const projectToResume = get(projectsStorage).get(name);
-        timer.resume({ timerName: name, ...projectToResume });
+        const periodToResume = projectToResume.periodsByDate?.get(getDateString(new Date()));
+
+        if(periodToResume) {
+            timer.resume({ ...periodToResume, timerName: name });
+        } else {
+            timer.resume({ timerName: name, h: 0, m: 0, s: 0, stringRepresentation: '00:00:00' });
+        }
     }
 
     function updateProject(name: ProjectName, timeSpent: TimeData) {
+        //TODO: add case when timer started in one date and then stopped in another - laaaaaater
         const existedProject = get(projectsStorage).get(name);
 
         const currentDate = new Date();
@@ -69,23 +76,30 @@ function projectsStore(timer) {
 
         const weekDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(currentDate);
         let newPeriods = new Map<Period>();
-        const totalTimespent = { h: 0, m: 0, s: 0 };
+        let totalTimespent = { h: 0, m: 0, s: 0 };
+        let periodTimeSpent = timeSpent;
 
         if (existedProject) {
             newPeriods = existedProject.periodsByDate;
             const existedPeriod = newPeriods.get(dateStringForPeriod);
-            
             totalTimespent.h = existedProject.h;
             totalTimespent.m = existedProject.m;
             totalTimespent.s = existedProject.s;
 
-            const periodTimeSpent = existedPeriod ? mergeTimeData(existedPeriod, timeSpent) : timeSpent;
-            newPeriods.set(dateStringForPeriod, periodTimeSpent);
-        } else { //TODO: think how to refactor it:
-            newPeriods.set(dateStringForPeriod, timeSpent);
+            if(existedPeriod) {
+                if (existedPeriod.h < timeSpent.h || existedPeriod.m < timeSpent.m || existedPeriod.s < timeSpent.s) {
+                    const difference = subtractTimeData(existedPeriod, timeSpent);
+                    totalTimespent = mergeTimeData(totalTimespent, difference);
+                }
+            } else {
+                totalTimespent.h = timeSpent.h;
+                totalTimespent.m = timeSpent.m;
+                totalTimespent.s = timeSpent.s;
+            }
         } 
 
-        totalTimespent = mergeTimeData(totalTimespent, timeSpent);
+        newPeriods.set(dateStringForPeriod, periodTimeSpent);
+        periodTimeSpent.stringRepresentation = `${periodTimeSpent.h.toString().padStart(2, '0')}:${periodTimeSpent.m.toString().padStart(2, '0')}:${periodTimeSpent.s.toString().padStart(2, '0')}`
 
         const projectData = {
             ...totalTimespent,
@@ -101,6 +115,10 @@ function projectsStore(timer) {
         });
 
         saveTimeData(Object.fromEntries(get(projectsStorage)));
+    }
+
+    function recalculateTimeSpent(periods: Map<Period>): TimeData {
+        return periods.entries().reduce((acc, [_, period]) => mergeTimeData(acc, period), { h: 0, m: 0, s: 0 });
     }
 
 

@@ -18,7 +18,7 @@ export const getDateString = (date: Date): string => {
  * @return {TimeData} The merged time data object.
  */
 export const mergeTimeData = (timeData1: TimeData, timeData2: TimeData): TimeData => {
-  const h, m, s = 0;
+  let h = 0, m = 0, s = 0;
 
   h = timeData1.h + timeData2.h;
   m = timeData1.m + timeData2.m;
@@ -32,6 +32,29 @@ export const mergeTimeData = (timeData1: TimeData, timeData2: TimeData): TimeDat
   if (m >= 60) {
     m = m - 60;
     h += 1;
+  }
+
+  return { h, m, s };
+}
+
+export const subtractTimeData = (subtractTimeData: TimeData, fromTimeData: TimeData): TimeData => {
+  let h = 0, m = 0, s = 0;
+
+  h = fromTimeData.h - subtractTimeData.h;
+  m = fromTimeData.m - subtractTimeData.m;
+  s = fromTimeData.s - subtractTimeData.s;
+
+
+  // 1 - 0, 20 - 59, 30 - 59
+
+  if ( m < 0 ) {
+    h -= 1;
+    m = 60 + m;
+  }
+
+  if ( s < 0 ) {
+    m -= 1;
+    s = 60 + s;
   }
 
   return { h, m, s };
