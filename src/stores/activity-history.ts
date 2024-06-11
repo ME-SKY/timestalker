@@ -31,9 +31,12 @@ function activityHistoryStore() {
 
       const existingGroup = acc.get(localeDateString);
 
+      console.log('name:', name);
       if (existingGroup) {
+        console.log('on existingGroup', projectData.s);
         existingGroup.push({ ...projectData, name: name });
       } else {
+        console.log('else: ', projectData.s);
         acc.set(localeDateString, [{ ...projectData, name: name }]);
       }
 
@@ -45,6 +48,7 @@ function activityHistoryStore() {
         latestDate = localeDateString;
       }
 
+      console.log('acc', acc);
       return acc;
     }, new Map<string, Project[]>());
 
@@ -66,7 +70,7 @@ function activityHistoryStore() {
       }
 
       return { h: acc.h, m: acc.m, s: acc.s };
-    })
+    }, { h: 0, m: 0, s: 0 });
 
     const latestDateParts = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric' }).formatToParts(new Date(latestDate));
     const formattedDate = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short' }).format(new Date(latestDate));

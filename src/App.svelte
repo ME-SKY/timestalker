@@ -1,6 +1,6 @@
 <script lang="ts">
-  import ActivityHistory from './ActivityHistory.svelte';
-  import TaskTimer from './TaskTimer.svelte';
+  import ActivityHistory from './containers/ActivityHistory.svelte';
+  import TaskTimer from './containers/TaskTimer.svelte';
 </script>
 
 <main class="container">

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { projects, projectsArray } from './stores/projects';
-  import { timer } from './stores/timer';
-  import { activityHistory } from './stores/activity-history';
-  import ProjectItem from './components/ProjectItem.svelte';
+  import { projects, projectsArray } from '../stores/projects';
+  import { timer } from '../stores/timer';
+  import { activityHistory } from '../stores/activity-history';
+  import ProjectItem from '../components/ProjectItem.svelte';
 
   const toggleProject = (e: CustomEvent) => {
     if ($timer.timerName === e.detail.name) {
@@ -42,11 +42,15 @@
 
     <div class="last-activity-projects">
       {#each $projectsArray as project}
-        <div class="project-block" class:active={$timer.timerName === project.name}>
+        <div
+          class="project-block"
+          class:active={$timer.timerName === project.name}
+        >
           <ProjectItem
             on:state-button-click={toggleProject}
-            name = {project.name || ''}
+            name={project.name || ''}
             timeSpent={project.stringRepresentation || ''}
+            periods={project.periodsByDate}
             projectState={$timer.timerName === project.name &&
             $timer.state === 'running'
               ? 'running'
@@ -71,7 +75,7 @@
   }
 
   // .last-activity-projects{
-    
+
   // }
 
   .project-block {
