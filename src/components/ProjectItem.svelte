@@ -8,19 +8,7 @@
   export let projectState: TimerState;
   export let periods: Map<DateSpan, TimeData> = new Map();
 
-  // import { tweened } from 'svelte/motion';
-	// import { cubicOut } from 'svelte/easing';
-
-	// const  = tweened(1, {
-	// 	duration: 300,
-	// 	easing: cubicOut
-	// });
-
   let height: number;
-
-  $: {
-    console.log('height is', height);
-  }
 
   const dispatch = createEventDispatcher();
 
@@ -53,84 +41,64 @@
   </div>
 
   {#if showPeriods}
-    <div class="project-periods" transition:slide={{ duration: 160 }}>
-      {#each periods as [name, timeSpent] (name)}
-        <div class="project-period">
-          <span class="project-period-name">{name}</span>
-          <span class="project-period-time-spent"
-            >{timeSpent.stringRepresentation}</span
-          >
-        </div>
-      {/each}
-    </div>
+      <div class="project-periods" transition:slide={{ duration: 180 }}>
+        {#each periods as [name, timeSpent] (name)}
+          <div class="project-period" >
+            <span class="project-period-name">{name}</span>
+            <span class="project-period-time-spent"
+              >{timeSpent.stringRepresentation}</span
+            >
+          </div>
+        {/each}
+      </div>
   {/if}
 </div>
 
 <style lang="scss">
   .project-periods {
-    margin-top: 18px;
-    border: 1px solid black;
-    // overflow: hidden;
-    padding: 0px 12px 0 12px;
-    // height: 0px;
+    border-radius: 0 0 6px 6px;
+    position: relative;
+    margin: 0 auto 0 auto;
+    background: rgba(255, 0, 0, 0.2);
+    border: 1px solid transparent;
+    padding: 12px 12px 12px 12px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     transition: height 0.3s ease;
-
-    // &.show {
-    //   height: auto;
-    // }
-  }
-  @keyframes blink {
-    //TODO: add blink one time animation for active project, - when he become active
-    // 0% {
-    // background: rgba(0,0,0,1);
-    // left: -100%;
-    // }
-    50% {
-      //     background:  linear-gradient(
-      // 	45deg,
-      // 	#fb0094,
-      // 	#0000ff,
-      // 	#00ff00,
-      // 	#ffff00,
-      // 	#ff0000,
-      // 	#fb0094,
-      // 	#0000ff,
-      // 	#00ff00,
-      // 	#ffff00,
-      // 	#ff0000
-      // );;
+    gap: 8px;
+    .project-period {
+      width: 60%;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
     }
-    // 100% {
-    // background: rgba(0,0,0,0.5);
-    // left: 100%;
-    // }
   }
-  .project-item {
-    font-size: 1.4rem;
-    padding: 18px 12px;
-    // display: flex;
-    // align-items: center;
-    // transition: background-position 1s linear;
 
+  .project-item {
     &:hover {
       background: rgba(211, 211, 211, 0.5);
     }
 
     &.active {
-      // background-color: rgba(0, 0, 0, 0.5);
-      // background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
       animation: blink 0.3s ease forwards;
       background: lightgray;
     }
   }
 
   .project-main-info {
-    // padding: 0px 0px 18px 0px;
+    padding: 18px 12px;
     display: flex;
     align-items: center;
-    // margin-bottom: 18px;
+
+    .name {
+      font-family: 'Roboto-Medium', monospace;
+      font-size: 1.2rem;
+    }
+    .time-spent {
+      font-size: 1.1rem;
+      font-family: 'Roboto-Regular', monospace;
+    }
   }
 
   .name,

@@ -31,7 +31,6 @@
 
   <div class="last-activity-detailed">
     <div class="last-activity-date-and-score">
-      <!-- <h5 class="day">{''},&nbsp;</h5> -->
       <h5 class="date">{$activityHistory.date?.short}</h5>
       <h5 class="score">
         {$activityHistory.score.h > 0
@@ -44,7 +43,7 @@
       {#each $projectsArray as project}
         <div
           class="project-block"
-          class:active={$timer.timerName === project.name}
+          class:active={($timer.timerName === project.name && $timer.state === 'running')}
         >
           <ProjectItem
             on:state-button-click={toggleProject}
@@ -66,34 +65,33 @@
   .activity-history {
     position: absolute;
     background: transparent;
-    // border-top-left-radius: 22px;
-    // border-top-right-radius: 22px;
+
     padding: 0px 20px;
     width: 100%;
     height: calc(88% - 12px);
     max-height: calc(88% - 12px);
   }
-
-  // .last-activity-projects{
-
-  // }
-
   .project-block {
-    border-width: 0px 0px 1px 0px;
+    overflow: hidden;
+    border-width: 1px 0px 1px 0px;
     border-style: solid;
-    border-bottom-color: black;
-    // border-top-color: transparent;
-    // border-left-color: transparent;
-    // border-right-color: transparent;
+    border-color: transparent;
+    margin-top: -1px;
+    position: relative;
+    z-index: 1;
+    // border-bottom-color: transparent;
+    // box-shadow:
+    //   0px 0px 2px 0px rgba(0, 0, 0, 0.26),
+    //   0px 0px 1px 0px rgba(0, 0, 0, 0.43);
 
     &:last-child {
-      border-bottom-color: transparent;
+      // border-bottom-color: transparent;
     }
 
     &.active {
-      // border-top-color: transparent;
-      // border-left-color: black;
-      // border-right-color: black;
+      border-color: black;
+      border-radius: 8px;
+      z-index: 2;
     }
   }
 
@@ -102,7 +100,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    // margin: 10px 0px;
     font-weight: 100;
   }
 
@@ -111,22 +108,21 @@
     background: whitesmoke;
     overflow-y: hidden;
     border-radius: 16px;
-    // border: 1px solid transparent;
 
-    // transition: box-shadow 0.3s ease-in-out;
-
-    // &:hover {
     box-shadow:
       0px 0px 4px 2px rgba(0, 0, 0, 0.165),
       0px 0px 2px 0px rgba(0, 0, 0, 0.26),
       0px 0px 1px 0px rgba(0, 0, 0, 0.43);
-    // }
   }
 
   .last-activity-date-and-score {
     display: flex;
     justify-content: left;
-    margin: 10px 16px;
+    margin: 0 0;
+    padding: 10px 16px;
+    box-shadow:
+      0px 0px 2px 0px rgba(0, 0, 0, 0.26),
+      0px 0px 1px 0px rgba(0, 0, 0, 0.43);
 
     .score {
       margin-left: auto;

@@ -112,7 +112,6 @@
     position: relative;
     background: whitesmoke;
     height: 100%;
-    // height: calc(12% + 12px);
     padding: 8px 18px 20px 18px;
     width: 100%;
     display: flex;
@@ -121,45 +120,6 @@
     clip-path: path(
       'M0, 0 L400, 0 L400,105 Q400,90 385,90 L15,90 Q0,90 0,105 L0,0 Z'
     );
-    // gap: 1%;
-
-    // &:before {
-    //     content: '';
-    //     position: absolute;
-    //     top: -5px;
-    //     left: 0;
-    //     width: 100%;
-    //     height: 100%;
-    //     background-color: inherit;
-    //     clip-path: inherit;
-    //     box-shadow: 0 4px 8px 0px rgba(57, 3, 235, 0.5);
-    //     z-index: -1; /* Place behind the main element */
-    // }
-
-    // &:after {
-    //     content: '';
-    //     position: absolute;
-    //     top: 0;
-    //     left: 0;
-    //     width: 100%;
-    //     height: 100%;
-    //     background-color: inherit;
-    //     clip-path: inherit;
-    //     box-shadow: 0 4px 8px 0px rgba(57, 3, 235, 0.5);
-
-    // }
-
-    // &:after {
-    //     content: attr(data-timer-state);
-    //     position: absolute;
-    //     width: 100%;
-    //     left: 0px;
-    //     display: flex;
-    //     justify-content: center;
-    //     bottom: 0px;
-    //     font-size: 0.8rem;
-    //     color: rgba(0, 0, 0, 0.629);
-    // }
   }
 
   .task-name {
@@ -170,7 +130,8 @@
       height: 100%;
       margin: 0;
       outline: none;
-      font-size: 1.7rem;
+      font-size: 1.3rem;
+      font-family: 'Roboto-Bold';
       padding: 0;
     }
   }
@@ -181,7 +142,8 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    font-size: 1.8rem;
+    font-family: 'Roboto-Regular';
+    font-size: 1.4rem;
 
     span.time-value-hours {
       flex: 0 0 32%;
@@ -192,7 +154,6 @@
     span.time-value-minutes {
       flex: 0 0 auto;
       min-width: 20%;
-      // margin: 0 2%;
       display: flex;
       justify-content: center;
     }
@@ -206,9 +167,6 @@
     span.delimeter {
       margin: 0 2%;
       flex: 0 0 4%;
-      // display: flex;
-      // align-items: center;
-      // justify-content: center;
     }
   }
 
