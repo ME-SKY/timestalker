@@ -37,7 +37,7 @@
   </div>
 
   <div class="activity-сhart">
-    //TODO add chart
+    //TODO: add chart
   </div>
   <!-- <div class="last-activity-short-hours-score"> -->
     <!-- <h6 class="this-day-hours-score">This day: 4 h 30 min</h6> -->
