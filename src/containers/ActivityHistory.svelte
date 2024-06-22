@@ -3,6 +3,14 @@
   import { timer } from '../stores/timer';
   import { activityHistory } from '../stores/activity-history';
   import ProjectItem from '../components/ProjectItem.svelte';
+    import { onMount } from 'svelte';
+
+  let lastProjects = $activityHistory.lastProjects;
+
+  onMount(() => {
+    console.log('last projects', $activityHistory.lastProjects);
+    
+  });
 
   const toggleProject = (e: CustomEvent) => {
     if ($timer.timerName === e.detail.name) {
@@ -24,12 +32,19 @@
 </script>
 
 <div class="activity-history">
-  <div class="last-activity-short-hours-score">
-    <!-- <h6 class="this-day-hours-score">This day: 4 h 30 min</h6> -->
-    <!-- <h6 class="this-week-hours-score">This week: 7 h 30 min</h6> -->
+  <div class="history">
+    //TODO: add history by days
   </div>
 
-  <div class="last-activity-detailed">
+  <div class="activity-сhart">
+    //TODO add chart
+  </div>
+  <!-- <div class="last-activity-short-hours-score"> -->
+    <!-- <h6 class="this-day-hours-score">This day: 4 h 30 min</h6> -->
+    <!-- <h6 class="this-week-hours-score">This week: 7 h 30 min</h6> -->
+  <!-- </div> -->
+
+  <!-- <div class="last-activity-detailed">
     <div class="last-activity-date-and-score">
       <h5 class="date">{$activityHistory.date?.short}</h5>
       <h5 class="score">
@@ -40,15 +55,15 @@
     </div>
 
     <div class="last-activity-projects">
-      {#each $projectsArray as project}
+      {#each $activityHistory.lastProjects as project (project.name)}
         <div
           class="project-block"
           class:active={($timer.timerName === project.name && $timer.state === 'running')}
         >
           <ProjectItem
             on:state-button-click={toggleProject}
-            name={project.name || ''}
-            timeSpent={project.stringRepresentation || ''}
+            name={project.name}
+            timeSpent={project.stringRepresentation}
             periods={project.periodsByDate}
             projectState={$timer.timerName === project.name &&
             $timer.state === 'running'
@@ -58,7 +73,7 @@
         </div>
       {/each}
     </div>
-  </div>
+  </div> -->
 </div>
 
 <style lang="scss">
@@ -89,8 +104,8 @@
     }
 
     &.active {
-      border-color: black;
-      border-radius: 8px;
+      // border-color: black;
+      // border-radius: 8px;
       z-index: 2;
     }
   }

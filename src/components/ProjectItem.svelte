@@ -3,9 +3,10 @@
   import { draw, slide, fade } from 'svelte/transition';
   import PlayButton from '@assets/play-button.svg?raw';
   import PauseButton from '@assets/pause-button.svg?raw';
-  export let name: string;
-  export let timeSpent: string;
-  export let projectState: TimerState;
+  
+  export let name: string = '';
+  export let timeSpent: string = '';
+  export let projectState: TimerState = 'stopped';
   export let periods: Map<DateSpan, TimeData> = new Map();
 
   let height: number;

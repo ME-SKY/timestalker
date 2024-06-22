@@ -7,6 +7,13 @@ interface ActivityHistory { //fix types later
   score: any;
   weekScore?: string | undefined;
   weekDay?: string | undefined;
+  lastProjects: any [];
+}
+
+interface DayHistory {
+  date: string,
+  score: TimeData,
+  projects: ProjectData [],
 }
 
 function activityHistoryStore() {
@@ -17,6 +24,7 @@ function activityHistoryStore() {
       score: { h: 0, m: 0, s: 0 },
       weekScore: undefined, //TODO: add
       weekDay: undefined, //TODO: add
+      lastProjects: []
     };
 
     if ($projects.size === 0) { return historyObject; }
@@ -31,11 +39,12 @@ function activityHistoryStore() {
 
       const existingGroup = acc.get(localeDateString);
 
-      console.log('name:', name);
+      console.log('localeDateString:', localeDateString);
       if (existingGroup) {
         console.log('on existingGroup', projectData.s);
         existingGroup.push({ ...projectData, name: name });
       } else {
+      // if (!existingGroup) {
         console.log('else: ', projectData.s);
         acc.set(localeDateString, [{ ...projectData, name: name }]);
       }
@@ -87,6 +96,16 @@ function activityHistoryStore() {
       short: `${latestDateParts[2].value} ${latestDateParts[0].value}`
     };
     historyObject.weekDay = latestWeekDay;
+    console.log('latestGroup', latestGroup);
+
+    historyObject.lastProjects = latestGroup.reverse().slice(0, 6);
+
+    if (historyObject.lastProjects.length > 0) {
+      console.log(typeof historyObject.lastProjects);
+      console.log('sure its array');
+    }
+
+    console.log('historyObject.lastProjects', historyObject.lastProjects);
 
     return historyObject;
   });
