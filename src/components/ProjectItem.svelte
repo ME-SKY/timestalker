@@ -3,7 +3,7 @@
   import { draw, slide, fade } from 'svelte/transition';
   import PlayButton from '@assets/play-button.svg?raw';
   import PauseButton from '@assets/pause-button.svg?raw';
-  
+
   export let name: string = '';
   export let timeSpent: string = '';
   export let projectState: TimerState = 'stopped';
@@ -41,7 +41,7 @@
     </button>
   </div>
 
-  {#if showPeriods}
+  <!-- {#if showPeriods}
       <div class="project-periods" transition:slide={{ duration: 180 }}>
         {#each periods as [name, timeSpent] (name)}
           <div class="project-period" >
@@ -52,7 +52,7 @@
           </div>
         {/each}
       </div>
-  {/if}
+  {/if} -->
 </div>
 
 <style lang="scss">

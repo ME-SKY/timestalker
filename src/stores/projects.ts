@@ -126,6 +126,36 @@ function projectsStore(timer) {
     return periods.entries().reduce((acc, [_, period]) => mergeTimeData(acc, period), { h: 0, m: 0, s: 0 });
   }
 
+  function toggleProject(projectName: ProjectName) {
+    console.log(timer.timerName);
+    const timerName = get(timer).timerName;
+    const timerState = get(timer).state;
+    const projects = get(projectsStorage);
+
+    console.log('timerName', timerName, 'timerState', timerState, 'projectName', projectName);
+    
+    if (timerName === projectName) {
+      console.log('timerName === projectName');
+      
+      if (timerState === 'running') {
+        console.log('timerName === running');
+        updateProject(timerName, timer.pause());
+      } else {
+        console.log('timerName !== running');
+        resumeProject(timerName);
+      }
+    } else {
+      console.log('timerName !== projectName');
+      if (timerName !== '') {
+        if (projects.has(timerName)) {
+          updateProject(timerName, timer.pause());
+        }
+      }
+      console.log('resume');
+
+      resumeProject(projectName);
+    }
+  }
 
 
   return {
@@ -134,7 +164,8 @@ function projectsStore(timer) {
     removeProject,
     updateProject,
     resumeProject,
-    setProjectToTimer
+    setProjectToTimer,
+    toggleProject
   };
 }
 

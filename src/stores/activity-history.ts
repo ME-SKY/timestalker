@@ -1,30 +1,28 @@
 import { readable, derived, writable, get } from 'svelte/store';
 import { projects } from '../stores/projects';
-import { getDateString } from '@/helpers';
+import { getDateString, mergeTimeData } from '@/helpers';
 
 interface ActivityHistory { //fix types later
-  date?: any;
-  score: any;
-  weekScore?: string | undefined;
-  weekDay?: string | undefined;
-  lastProjects: any [];
+  lastDate?: any;
+  // date?: any;
+  totalScore: any;
+  histories: DayHistory [];
+  // weekScore?: string | undefined;
+  // weekDay?: string | undefined;
+  // lastProjects: any [];
 }
 
-interface DayHistory {
-  date: string,
-  score: TimeData,
-  projects: ProjectData [],
-}
+
 
 function activityHistoryStore() {
   const activityHistoryStorage = derived(projects, $projects => {
 
     const historyObject: ActivityHistory = {
-      date: undefined,
-      score: { h: 0, m: 0, s: 0 },
-      weekScore: undefined, //TODO: add
-      weekDay: undefined, //TODO: add
-      lastProjects: []
+      lastDate: undefined,
+      totalScore: { h: 0, m: 0, s: 0 },
+      // weekScore: undefined, //TODO: add
+      // weekDay: undefined, //TODO: add
+      histories: []
     };
 
     if ($projects.size === 0) { return historyObject; }
@@ -39,13 +37,13 @@ function activityHistoryStore() {
 
       const existingGroup = acc.get(localeDateString);
 
-      console.log('localeDateString:', localeDateString);
+      // console.log('localeDateString:', localeDateString);
       if (existingGroup) {
-        console.log('on existingGroup', projectData.s);
+        // console.log('on existingGroup', projectData.s);
         existingGroup.push({ ...projectData, name: name });
       } else {
       // if (!existingGroup) {
-        console.log('else: ', projectData.s);
+        // console.log('else: ', projectData.s);
         acc.set(localeDateString, [{ ...projectData, name: name }]);
       }
 
@@ -57,11 +55,21 @@ function activityHistoryStore() {
         latestDate = localeDateString;
       }
 
-      console.log('acc', acc);
+      // console.log('acc', acc);
       return acc;
     }, new Map<string, Project[]>());
 
     const latestGroup = dateGroups.get(latestDate);
+
+    const dateGroupsArray: DayHistory[] = Array.from(dateGroups.entries()).map(([date, projects]) => {
+      const score  = projects.reduce((acc, project) => {
+        const {h, m, s} = project.periodsByDate.get(date);
+        return mergeTimeData(acc, { h, m, s });
+      }, { h: 0, m: 0, s: 0 });
+
+      return { date, projects, score };
+    });
+
 
     const calculatedScore = latestGroup.reduce((acc, project) => {
       acc.s += project.s;
@@ -84,28 +92,29 @@ function activityHistoryStore() {
     const latestDateParts = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric' }).formatToParts(new Date(latestDate));
     const formattedDate = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short' }).format(new Date(latestDate));
 
-    console.log('formattedDate', formattedDate);
-    console.log('latestDate', latestDate);
-    console.log('latestGroup', latestGroup);
+    // console.log('formattedDate', formattedDate);
+    // console.log('latestDate', latestDate);
+    // console.log('latestGroup', latestGroup);
 
-    historyObject.score = {
-      ...calculatedScore
-    };
-    historyObject.date = {
+    // historyObject.score = {
+    //   ...calculatedScore
+    // };
+    historyObject.lastDate = {
       itselfString: latestDate,
       short: `${latestDateParts[2].value} ${latestDateParts[0].value}`
     };
-    historyObject.weekDay = latestWeekDay;
-    console.log('latestGroup', latestGroup);
+    // historyObject.weekDay = latestWeekDay;
+    // console.log('latestGroup', latestGroup);
 
-    historyObject.lastProjects = latestGroup.reverse().slice(0, 6);
+    // historyObject.lastProjects = latestGroup.reverse().slice(0, 6);
 
-    if (historyObject.lastProjects.length > 0) {
-      console.log(typeof historyObject.lastProjects);
-      console.log('sure its array');
-    }
+    // if (historyObject.lastProjects.length > 0) {
+      // console.log(typeof historyObject.lastProjects);
+      // console.log('sure its array');
+    // }
+    historyObject.histories = dateGroupsArray;
 
-    console.log('historyObject.lastProjects', historyObject.lastProjects);
+    // console.log('historyObject.lastProjects', historyObject.lastProjects);
 
     return historyObject;
   });

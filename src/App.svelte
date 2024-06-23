@@ -6,6 +6,7 @@
 <main class="container">
   <TaskTimer />
   <ActivityHistory />
+  <!-- <Settings />  TODO: add it -->
 </main>
 
 <style lang="scss">

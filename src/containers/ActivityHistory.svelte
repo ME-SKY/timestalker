@@ -3,45 +3,46 @@
   import { timer } from '../stores/timer';
   import { activityHistory } from '../stores/activity-history';
   import ProjectItem from '../components/ProjectItem.svelte';
-    import { onMount } from 'svelte';
+  import DayHistory from './DayHistory.svelte';
+  import { onMount } from 'svelte';
 
-  let lastProjects = $activityHistory.lastProjects;
+  // let histories = $activityHistory.histories.length ? $activityHistory.histories : [];
 
-  onMount(() => {
-    console.log('last projects', $activityHistory.lastProjects);
-    
-  });
+  // onMount(() => {
+  // console.log('last projects', $activityHistory.lastProjects);
+  // });
 
-  const toggleProject = (e: CustomEvent) => {
-    if ($timer.timerName === e.detail.name) {
-      if ($timer.state === 'running') {
-        projects.updateProject($timer.timerName, timer.pause());
-      } else {
-        projects.resumeProject($timer.timerName);
-      }
-    } else {
-      if ($timer.timerName !== '') {
-        if ($projects.has($timer.timerName)) {
-          projects.updateProject($timer.timerName, timer.pause());
-        }
-      }
+  // const toggleProject = (projectName) => {
+  //   if ($timer.timerName === projectName) {
+  //     if ($timer.state === 'running') {
+  //       projects.updateProject($timer.timerName, timer.pause());
+  //     } else {
+  //       projects.resumeProject($timer.timerName);
+  //     }
+  //   } else {
+  //     if ($timer.timerName !== '') {
+  //       if ($projects.has($timer.timerName)) {
+  //         projects.updateProject($timer.timerName, timer.pause());
+  //       }
+  //     }
 
-      projects.resumeProject(e.detail.name);
-    }
-  };
+  //     projects.resumeProject(projectName);
+  //   }
+  // };
 </script>
 
 <div class="activity-history">
   <div class="history">
-    //TODO: add history by days
+    {#each $activityHistory.histories as dayHistory (dayHistory.date)}
+      <DayHistory {dayHistory} />
+      <!-- {dayHistory.date} -->
+    {/each}
   </div>
 
-  <div class="activity-сhart">
-    //TODO: add chart
-  </div>
+  <div class="chart-here">chart</div>
   <!-- <div class="last-activity-short-hours-score"> -->
-    <!-- <h6 class="this-day-hours-score">This day: 4 h 30 min</h6> -->
-    <!-- <h6 class="this-week-hours-score">This week: 7 h 30 min</h6> -->
+  <!-- <h6 class="this-day-hours-score">This day: 4 h 30 min</h6> -->
+  <!-- <h6 class="this-week-hours-score">This week: 7 h 30 min</h6> -->
   <!-- </div> -->
 
   <!-- <div class="last-activity-detailed">
@@ -77,75 +78,35 @@
 </div>
 
 <style lang="scss">
+  // .сhart-here {
+  //   min-height: 30%;
+  //   background: rgba(65, 89, 195, 0.26);
+  // }
+  
   .activity-history {
-    position: absolute;
-    background: transparent;
-
+    // container: activityHistory / size;
+    // position: absolute;
+    background: rgba(195, 65, 65, 0.26);
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    gap:1%;
     padding: 0px 20px;
     width: 100%;
-    height: calc(88% - 12px);
-    max-height: calc(88% - 12px);
-  }
-  .project-block {
-    overflow: hidden;
-    border-width: 1px 0px 1px 0px;
-    border-style: solid;
-    border-color: transparent;
-    margin-top: -1px;
-    position: relative;
-    z-index: 1;
-    // border-bottom-color: transparent;
-    // box-shadow:
-    //   0px 0px 2px 0px rgba(0, 0, 0, 0.26),
-    //   0px 0px 1px 0px rgba(0, 0, 0, 0.43);
-
-    &:last-child {
-      // border-bottom-color: transparent;
+    height: calc(88% - 6% - 12px); //  - 6% for the Settings component
+    max-height: calc(88% - 6% - 12px);
+    .history {
+      display: flex;
+      flex-flow: column nowrap;
+      gap: 5px;
+      overflow: hidden;
+      height: 68%;
     }
 
-    &.active {
-      // border-color: black;
-      // border-radius: 8px;
-      z-index: 2;
+    .chart-here {
+      height: 30%;
+      background: rgba(65, 89, 195, 0.26);
     }
   }
-
-  .last-activity-short-hours-score {
-    min-height: 6px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 100;
-  }
-
-  .last-activity-detailed {
-    max-height: calc(100% - 18px);
-    background: whitesmoke;
-    overflow-y: hidden;
-    border-radius: 16px;
-
-    box-shadow:
-      0px 0px 4px 2px rgba(0, 0, 0, 0.165),
-      0px 0px 2px 0px rgba(0, 0, 0, 0.26),
-      0px 0px 1px 0px rgba(0, 0, 0, 0.43);
-  }
-
-  .last-activity-date-and-score {
-    display: flex;
-    justify-content: left;
-    margin: 0 0;
-    padding: 10px 16px;
-    box-shadow:
-      0px 0px 2px 0px rgba(0, 0, 0, 0.26),
-      0px 0px 1px 0px rgba(0, 0, 0, 0.43);
-
-    .score {
-      margin-left: auto;
-    }
-
-    .score,
-    .date {
-      font-size: 1.1rem;
-    }
-  }
+  
 </style>

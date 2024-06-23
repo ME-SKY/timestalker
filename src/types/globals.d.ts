@@ -30,3 +30,9 @@ interface ProjectData extends TimeData {
 }
 
 type Project = Record<ProjectName, ProjectData>
+
+interface DayHistory {
+  date: string,
+  score: TimeData,
+  projects: ProjectData [],
+}
