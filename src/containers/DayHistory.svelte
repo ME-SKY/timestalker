@@ -2,7 +2,7 @@
   import { timer } from '@/stores/timer';
   import { projects as projectsStore } from '@/stores/projects';
   import ProjectItem from '../components/ProjectItem.svelte';
-    import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
 
   export let dayHistory: DayHistory;
   // export let toggleProject: (e: any) => void;
@@ -19,31 +19,35 @@
   const { date, score, projects } = dayHistory;
 
   function onScroll() {
-    if(projectsTagsRef.scrollLeft > 5){
-      leftSideTransparent = 'left-side-transparent';
-      projectsTagsClass.add('left-side-transparent');
-      // projectsTagsRef.classList.add('left-side-transparent');
+    console.log('workds');
 
+    console.log('projectsTagsRef.scrollLeft', projectsTagsRef.scrollLeft);
+    if (projectsTagsRef.scrollLeft > 5) {
+      leftSideTransparent = 'left-side-transparent';
+      // projectsTagsClass.add('left-side-transparent');
+      // projectsTagsRef.classList.add('left-side-transparent');
     } else {
       leftSideTransparent = '';
-      projectsTagsClass.delete('left-side-transparent');
+      // projectsTagsClass.delete('left-side-transparent');
       // projectsTagsRef.classList.remove('left-side-transparent');
     }
 
-    if(projectsTagsRef.scrollLeft + projectsTagsRef.clientWidth < projectsTagsRef.scrollWidth - 5){
-      projectsTagsClass.add('right-side-transparent');
+    if (
+      projectsTagsRef.scrollLeft + projectsTagsRef.clientWidth <
+      projectsTagsRef.scrollWidth - 5
+    ) {
+      // projectsTagsClass.add('right-side-transparent');
       rightSideTransparent = 'right-side-transparent';
       // projectsTagsRef.classList.add('right-side-transparent');
     } else {
       rightSideTransparent = '';
-      projectsTagsClass.delete('right-side-transparent');
+      // projectsTagsClass.delete('right-side-transparent');
       // projectsTagsRef.classList.remove('right-side-transparent');
     }
-
   }
 
   onMount(() => {
-    if(projectsTagsRef.clientWidth < projectsTagsRef.scrollWidth){
+    if (projectsTagsRef.clientWidth < projectsTagsRef.scrollWidth) {
       // projectsTagsRef.classList.add('right-side-transparent');
       // tagsNeedScroll = true;
       rightSideTransparent = 'right-side-transparent';
@@ -56,13 +60,8 @@
     projectsTagsRef.removeEventListener('scroll', onScroll);
   });
 
-  
-
-  
-
   // $: leftSideTransparent = projectsTagsRef?.scrollLeft > 5 ? 'left-side-transparent' : '';
   // $: rightSideTransparent = projectsTagsRef?.scrollLeft + projectsTagsRef?.clientWidth < projectsTagsRef?.scrollWidth - 5 ? 'right-side-transparent' : '';
-
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -77,13 +76,23 @@
 
   <!-- svelte-ignore typecheck -->
   <!-- svelte-ignore duplicate-attribute -->
-  <div  bind:this={projectsTagsRef} class={`projects-tags 
-  ${leftSideTransparent} ${rightSideTransparent}`}>
-    {#each projects as project (project.name)}
-      <div class="project-tag">
-        {project.name}
-      </div>
-    {/each}
+  <div
+    class={`projects-tags 
+  ${leftSideTransparent} ${rightSideTransparent}`}
+  >
+    <div
+      class={`left-side-transparent ${leftSideTransparent ? 'active' : ''}`}
+    ></div>
+    <div bind:this={projectsTagsRef} class={`tags-container`}>
+      {#each projects as project (project.name)}
+        <div class="project-tag">
+          {project.name}
+        </div>
+      {/each}
+    </div>
+    <div
+      class={`right-side-transparent ${rightSideTransparent ? 'active' : ''}`}
+    ></div>
   </div>
 
   <!-- <div class="projects">
@@ -142,55 +151,86 @@
       background: whitesmoke;
       bottom: 22px;
       position: relative;
-      display: flex;
-      flex-flow: row nowrap;
+      // display: flex;
+      // flex-flow: row nowrap;
       gap: 8px;
       overflow-x: auto;
+
+      .tags-container {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 8px;
+        overflow-x: auto;
+        background: whitesmoke;
+
+        &::-webkit-scrollbar {
+          display: none;
+          // width: 8px;
+        }
+        // height: inherit;
+      }
 
       // &.left-side-transparent {
       //   background: blue;
       // }
 
-      &.left-side-transparent, &.right-side-transparent {
+      .left-side-transparent,
+      .right-side-transparent {
+        top:0;
         // background-color: whitesmoke;
-        position: relative;
-
-        &:before, &:after {
-          // display: block;
-          // background-color: ;
-          content: '';
-          position: sticky;
-          // top: 0;
-          // bottom: 0;
-          width: 8px;
-          height: 22px;
-          z-index: 1;
-          
-          // background: ;
-        }
-
-        // &:before {
-// 
-        // }
+        position: absolute;
+        width: 22px;
+        height: 100%;
+        background: transparent;
       }
 
-      &.left-side-transparent {
-        &:before {
-          // left:22px;
-          background: linear-gradient(90deg,#f5f5f5,rgba(241, 241, 241, 0.001) 95%, transparent);
-        }
+      .left-side-transparent.active {
+        left: 0;
+        background: linear-gradient(
+          90deg,
+          #f5f5f5,
+          rgba(241, 241, 241, 0.001) 95%,
+          transparent
+        );
       }
 
-      &.right-side-transparent {
-        &:after {
-          // float: right;
-          // margin-left: auto;
-          // display: none;
-          right:22px;
-          background: linear-gradient(90deg,transparent,rgba(241, 241, 241, 0.001), #f5f5f5);
-        }
+      .right-side-transparent.active {
+        right: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(241, 241, 241, 0.001) 5%,
+          #f5f5f5
+        );
       }
-      
+
+      // &.left-side-transparent {
+      //   &:before {
+      //     // left:22px;
+      //     background: linear-gradient(
+      //       90deg,
+      //       #f5f5f5,
+      //       rgba(241, 241, 241, 0.001) 95%,
+      //       transparent
+      //     );
+      //   }
+      // }
+
+      // &.right-side-transparent {
+      //   &:after {
+      //     // float: right;
+      //     // margin-left: auto;
+      //     // display: none;
+      //     right: 0px;
+      //     background: linear-gradient(
+      //       90deg,
+      //       transparent,
+      //       rgba(241, 241, 241, 0.001),
+      //       #f5f5f5
+      //     );
+      //   }
+      // }
+
       // &.l
 
       .project-tag {
