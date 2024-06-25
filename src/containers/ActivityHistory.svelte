@@ -5,6 +5,7 @@
   import ProjectItem from '../components/ProjectItem.svelte';
   import DayHistory from './DayHistory.svelte';
   import { onMount } from 'svelte';
+    import ActivityChart from './ActivityChart.svelte';
 
   // let histories = $activityHistory.histories.length ? $activityHistory.histories : [];
 
@@ -39,7 +40,9 @@
     {/each}
   </div>
 
-  <div class="chart-here">chart</div>
+  <div class="chart">
+    <ActivityChart />
+  </div>
   <!-- <div class="last-activity-short-hours-score"> -->
   <!-- <h6 class="this-day-hours-score">This day: 4 h 30 min</h6> -->
   <!-- <h6 class="this-week-hours-score">This week: 7 h 30 min</h6> -->
@@ -86,7 +89,7 @@
   .activity-history {
     // container: activityHistory / size;
     // position: absolute;
-    background: rgba(195, 65, 65, 0.26);
+    // background: rgba(195, 65, 65, 0.26);
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;
@@ -96,16 +99,19 @@
     height: calc(88% - 6% - 12px); //  - 6% for the Settings component
     max-height: calc(88% - 6% - 12px);
     .history {
+      box-shadow: 0px 0px 1px 1px rgba(122, 122, 122, 0.26);
+      border-radius: 10px;
+      // border: 1px solid transparent;
       display: flex;
       flex-flow: column nowrap;
-      gap: 5px;
+      // gap: 5px;
       overflow: hidden;
-      height: 68%;
+      height: auto;
     }
 
-    .chart-here {
-      height: 30%;
-      background: rgba(65, 89, 195, 0.26);
+    .chart {
+      flex: 1;
+      // background: rgba(65, 89, 195, 0.26);
     }
   }
   

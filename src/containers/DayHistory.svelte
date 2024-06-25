@@ -119,17 +119,45 @@
 <style lang="scss">
   .day-history {
     position: relative;
-    border: 1px solid transparent;
-    border-radius: 6px;
+    border-bottom: 1px solid rgba(74, 74, 74, 0.482);
+    border-top: 1px solid rgba(74, 74, 74, 0.482);
+    // border: 1px solid transparent;
+    // border-radius: 6px;
     // position: absolute;
     background: whitesmoke;
     // background: linear-gradient(90deg,#f5f5f5,rgba(241, 241, 241, 0.001), transparent);
     padding: 0px 20px;
     width: 100%;
     height: 60px;
+    z-index: 1;
+    margin-top: -1px;
+
+    &:first-child {
+      border-top-color: transparent;
+
+      &:hover {
+        border-top-color: transparent;
+        border-bottom-color: rgb(25, 25, 25);
+        z-index: 2;
+        // transform: scale(1.05);
+      }
+    }
+
+    &:last-child {
+      border-bottom-color: transparent;
+      // border-top-color: rgb(25, 25, 25);
+
+      &:hover {
+        border-top-color: rgb(25, 25, 25);
+        border-bottom-color: transparent;
+        z-index: 2;
+        // transform: scale(1.05);
+      }
+    }
 
     &:hover {
       border-color: rgb(25, 25, 25);
+      z-index: 2;
       // transform: scale(1.05);
     }
 
@@ -176,7 +204,7 @@
 
       .left-side-transparent,
       .right-side-transparent {
-        top:0;
+        top: 0;
         // background-color: whitesmoke;
         position: absolute;
         width: 22px;
