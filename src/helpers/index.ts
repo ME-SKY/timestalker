@@ -1,8 +1,29 @@
+const MONTHS_BY_NUMBER: { [key: number]: { long: string, short: string } } = {
+  1: { long: 'January', short: 'Jan' },
+  2: { long: 'February', short: 'Feb' },
+  3: { long: 'March', short: 'Mar' },
+  4: { long: 'April', short: 'Apr' },
+  5: { long: 'May', short: 'May' },
+  6: { long: 'June', short: 'Jun' },
+  7: { long: 'July', short: 'Jul' },
+  8: { long: 'August', short: 'Aug' },
+  9: { long: 'September', short: 'Sep' },
+  10: { long: 'October', short: 'Oct' },
+  11: { long: 'November', short: 'Nov' },
+  12: { long: 'December', short: 'Dec' },
+};
+
 export const getDateString = (date: Date): string => {
   const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
   const localeDateArr = date.toLocaleDateString(undefined, options).replace(/\//g, '-').split('-');
   const localeDateString = `${localeDateArr[2]}-${localeDateArr[1]}-${localeDateArr[0]}`;
   return localeDateString;
+}
+
+export const dayWithMonth = (dateString: string): string => { 
+  const month = dateString.split('-')[1];
+  const day = dateString.split('-')[2];
+  return `${day} ${MONTHS_BY_NUMBER[Number(month)].short}`;
 }
 
 

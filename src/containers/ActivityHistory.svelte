@@ -7,6 +7,12 @@
   import { onMount } from 'svelte';
     import ActivityChart from './ActivityChart.svelte';
 
+    let chartHeight: number;
+
+    $: console.log('chartHeight', chartHeight);
+
+
+
   // let histories = $activityHistory.histories.length ? $activityHistory.histories : [];
 
   // onMount(() => {
@@ -40,8 +46,8 @@
     {/each}
   </div>
 
-  <div class="chart">
-    <ActivityChart />
+  <div class="chart" bind:clientHeight={chartHeight}>
+    <ActivityChart height={chartHeight}/>
   </div>
   <!-- <div class="last-activity-short-hours-score"> -->
   <!-- <h6 class="this-day-hours-score">This day: 4 h 30 min</h6> -->
@@ -99,6 +105,7 @@
     height: calc(88% - 6% - 12px); //  - 6% for the Settings component
     max-height: calc(88% - 6% - 12px);
     .history {
+      z-index: 1;
       box-shadow: 0px 0px 1px 1px rgba(122, 122, 122, 0.26);
       border-radius: 10px;
       // border: 1px solid transparent;
@@ -106,11 +113,13 @@
       flex-flow: column nowrap;
       // gap: 5px;
       overflow: hidden;
-      height: auto;
+      height: 57%;
     }
 
     .chart {
-      flex: 1;
+      height: 42%;
+      box-shadow: 0px 0px 1px 1px rgba(122, 122, 122, 0.26);
+      border-radius: 10px;
       // background: rgba(65, 89, 195, 0.26);
     }
   }
