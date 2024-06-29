@@ -10,7 +10,7 @@
 
   let chartCanvas: HTMLCanvasElement;
   let activityChartContainer: HTMLDivElement;
-  // let chart: Chart | undefined;
+  let chart: Chart | undefined;
 
   function initChart() {
     // debugger;
@@ -56,7 +56,7 @@
         },
       };
 
-      new Chart(chartCanvas, {
+      chart = new Chart(chartCanvas, {
         type: 'bar',
         data,
         options,
@@ -65,8 +65,12 @@
   }
 
   $: {
-    if (chartCanvas && $activityHistory.histories.length > 0) {
+    if (!chart && $activityHistory.histories.length > 0) {
       initChart();
+    }
+
+    if(chart && $activityHistory.histories.length > 0) {
+      chart?.update();
     }
   }
 

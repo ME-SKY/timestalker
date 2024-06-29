@@ -63,8 +63,9 @@ function activityHistoryStore() {
 
     const dateGroupsArray: DayHistory[] = Array.from(dateGroups.entries()).map(([date, projects]) => {
       const score  = projects.reduce((acc, project) => {
-        const {h, m, s} = project.periodsByDate.get(date);
-        return mergeTimeData(acc, { h, m, s });
+
+        const periodTime = project.periodsByDate.get(date);
+        return periodTime ? mergeTimeData(acc, { h: periodTime.h, m: periodTime.m, s: periodTime.s }) : acc;
       }, { h: 0, m: 0, s: 0 });
 
       return { date, projects, score };
