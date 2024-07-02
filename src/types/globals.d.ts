@@ -1,4 +1,4 @@
-type TimerState =  = 'running' | 'paused' | 'stopped';
+type TimerState = 'running' | 'paused' | 'stopped';
 type ProjectName = string;
 
 type Year = `${number}${number}${number}${number}`;
@@ -16,8 +16,8 @@ interface TimeData {
 }
 
 interface TimerData extends TimeData {
-  timerState: TimerState,
-  timerName?: string,
+  state: TimerState,
+  timerName?: string | undefined,
 }
 
 const listOfAvailableTimezones = Intl.supportedValuesOf('timeZone');

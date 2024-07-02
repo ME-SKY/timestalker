@@ -19,6 +19,7 @@
      */
     "allowJs": true,
     "checkJs": true,
+    // "strict": true,
     "isolatedModules": true,
     "typeRoots": ["./src/types", "./node_modules/@types"]
   },

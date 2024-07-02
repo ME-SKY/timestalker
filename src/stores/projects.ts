@@ -1,16 +1,17 @@
-import { readable, derived, writable, get } from 'svelte/store';
+import { readable, derived, writable, get, type Stores } from 'svelte/store';
 import { loadTimeData, saveTimeData } from '../data-service/time-data-service';
 import { timer } from '../stores/timer';
 import { getDateString, mergeTimeData, subtractTimeData } from '@/helpers';
 
 
-function projectsStore(timer) {
-  const projectsStorage = writable<Map<Project>>(new Map());
+function projectsStore(timer: Stores) {
+  const projectsStorage = writable(new Map());
   const { subscribe, set, update } = projectsStorage;
 
   loadTimeData().then((timeData) => {
     const loadedProjectsTimeData = new Map(Object.entries(timeData));
     loadedProjectsTimeData.forEach((project, name) => {
+      // @ts-ignore TODO: figure out later
       project.periodsByDate = new Map(Object.entries(project.periodsByDate));
     })
     set(loadedProjectsTimeData);
@@ -26,14 +27,16 @@ function projectsStore(timer) {
         s: 0,
         stringRepresentation: '00:00:00',
         lastUpdateDate: currentDate.toISOString(),
-        lastUpdateWeekDay: currentDate.toLocaleDateString('en-US', { weekday: 'long' }),
+        // lastUpdateWeekDay: currentDate.toLocaleDateString('en-US', { weekday: 'long' }),
         periodsByDate: new Map()
       }
       projects.set(name, newProject);
 
       return projects;
     });
+    // @ts-ignore TODO: figure out later
     timer.reset();
+    // @ts-ignore TODO: figure out later
     timer.start(name);
   }
 

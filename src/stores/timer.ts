@@ -1,7 +1,7 @@
 import { readable, derived, writable, get } from 'svelte/store';
 
 function timerStore() {
-  const timerStorage = writable({ h: 0, m: 0, s: 0, stringRepresentation: '00:00:00', state: 'stopped' as TIMER_STATE, timerName: '' as ProjectName });
+  const timerStorage = writable({ h: 0, m: 0, s: 0, stringRepresentation: '00:00:00', state: 'stopped' as TimerState, timerName: ''} as TimerData);
   const { subscribe, set, update } = timerStorage;
 
   let interval: number | undefined = undefined;
@@ -33,13 +33,13 @@ function timerStore() {
     startInterval();
   }
 
-  function reset(triggerName?: boolean = true) {
+  function reset(triggerName: boolean = true) {
     if (interval) {
       clearInterval(interval);
       interval = undefined;
     }
 
-    const defaultTimerSetting = { state: 'stopped', h: 0, m: 0, s: 0, stringRepresentation: '00:00:00' };
+    const defaultTimerSetting: TimerData = { state: 'stopped', h: 0, m: 0, s: 0, stringRepresentation: '00:00:00' };
 
     if (triggerName) {
       defaultTimerSetting.timerName = '';
