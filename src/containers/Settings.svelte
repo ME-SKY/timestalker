@@ -1,10 +1,11 @@
 <script lang="ts">
+  import SettingsIcon from '@assets/settings.svg?raw';
 
 </script>
 
 <div class="settings-section">
   <div class="settings">
-    <button>Setting</button>
+    <button>{@html SettingsIcon}</button>
     <div class="current-time">Current time in two main timezones</div>
     <div class="weather"></div>
   </div>
@@ -13,7 +14,7 @@
 <style lang="scss">
   .settings-section {
     width: 100%;
-    height: 6%;
+    height: 10%;
     background: transparent;
     filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.2))
       drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.3))
@@ -21,17 +22,30 @@
   }
 
   .settings {
+    padding: 15px 20px 0 20px;
     background: whitesmoke;
     height: 100%;
     clip-path: path(
-      'M0, 0 Q0,15 15,15 L385,15 Q400,15 400,0 L400,46, L0,46, L0,0 Z'
+      'M0, 0 Q0,15 15,15 L385,15 Q400,15 400,0 L400,77, L0,77, L0,0 Z'
     );
     width: 100%;
     height: 100%;
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
+
+
+    button {
+      background: transparent;
+      outline: 0;
+      box-shadow: none;
+      border: none;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      margin:0;
+    }
   }
 
   .current-time {

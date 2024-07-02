@@ -20,7 +20,7 @@
     "allowJs": true,
     "checkJs": true,
     "isolatedModules": true,
-    // "typeRoots": ["./types", "./node_modules/@types"]
+    "typeRoots": ["./src/types", "./node_modules/@types"]
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
   "references": [{ "path": "./tsconfig.node.json" }]

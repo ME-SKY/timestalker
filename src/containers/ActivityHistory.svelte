@@ -102,8 +102,8 @@
     gap:1%;
     padding: 0px 20px;
     width: 100%;
-    height: calc(88% - 6% - 12px); //  - 6% for the Settings component
-    max-height: calc(88% - 6% - 12px);
+    height: calc(88% - 10% - 12px); //  - 10% for the Settings component
+    max-height: calc(88% - 10% - 12px);
     .history {
       z-index: 1;
       box-shadow: 0px 0px 1px 1px rgba(122, 122, 122, 0.26);
@@ -113,12 +113,12 @@
       flex-flow: column nowrap;
       // gap: 5px;
       overflow: hidden;
-      height: 57%;
+      height: 60%;
     }
 
     .chart {
       background: whitesmoke;
-      height: 42%;
+      height: 39%;
       box-shadow: 0px 0px 1px 1px rgba(122, 122, 122, 0.26);
       border-radius: 10px;
       // background: rgba(65, 89, 195, 0.26);

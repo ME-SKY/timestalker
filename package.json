@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1",
+    "@types/locale": "^0.1.4",
     "chart.js": "^4.4.3"
   },
   "devDependencies": {

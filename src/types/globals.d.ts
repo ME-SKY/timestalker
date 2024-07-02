@@ -20,6 +20,8 @@ interface TimerData extends TimeData {
   timerName?: string,
 }
 
+const listOfAvailableTimezones = Intl.supportedValuesOf('timeZone');
+
 type Period = Record<DateSpan, TimeData>
 
 interface ProjectData extends TimeData {
@@ -35,4 +37,13 @@ interface DayHistory {
   date: string,
   score: TimeData,
   projects: ProjectData [],
+}
+
+type TimezoneSetting = `${Locale}:${typeof listOfAvailableTimezones[number]}`;
+
+interface Settings {
+  theme: string,
+  mainTimezone: TimezoneSetting,
+  additionalTimezone: TimezoneSetting,
+  syncMode: 'local' | 'google-sync'
 }
