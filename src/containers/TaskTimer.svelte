@@ -4,10 +4,13 @@
   import { TIMER_ACTIONS_BASED_ON_STATE as TIMER_ACTIONS } from '../consts';
 
   const startTimer = () => {
-    if ($projects.has(name)) {
-      projects.resumeProject(name);
-    } else {
-      projects.createProject(name);
+    if(name !== undefined) {
+
+      if ($projects.has(name)) {
+        projects.resumeProject(name);
+      } else {
+        projects.createProject(name);
+      }
     }
   };
 
@@ -32,7 +35,7 @@
     const newValue = e.target.value;
     name = newValue;
 
-    if ($timer.state === 'running') {
+    if ($timer.state === 'running' && $timer.timerName) {
       projects.updateProject($timer.timerName, timer.pause());
     }
 

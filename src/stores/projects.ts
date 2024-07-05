@@ -1,15 +1,15 @@
-import { readable, derived, writable, get, type Stores } from 'svelte/store';
+import { readable, derived, writable, get, type Readable } from 'svelte/store';
 import { loadTimeData, saveTimeData } from '../data-service/time-data-service';
 import { timer } from '../stores/timer';
 import { getDateString, mergeTimeData, subtractTimeData } from '@/helpers';
 
 
-function projectsStore(timer: Stores) {
+function projectsStore(timer: any) { //TODO: i dont know what type of timer store here
   const projectsStorage = writable(new Map());
   const { subscribe, set, update } = projectsStorage;
 
   loadTimeData().then((timeData) => {
-    const loadedProjectsTimeData = new Map(Object.entries(timeData));
+    const loadedProjectsTimeData = new Map([...Object.entries(timeData)]);
     loadedProjectsTimeData.forEach((project, name) => {
       // @ts-ignore TODO: figure out later
       project.periodsByDate = new Map(Object.entries(project.periodsByDate));
@@ -20,7 +20,6 @@ function projectsStore(timer: Stores) {
   function createProject(name: string) {
     update(projects => {
       const currentDate = new Date();
-      console.log('currentDate:', currentDate);
       const newProject: ProjectData = {
         h: 0,
         m: 0,
@@ -28,7 +27,7 @@ function projectsStore(timer: Stores) {
         stringRepresentation: '00:00:00',
         lastUpdateDate: currentDate.toISOString(),
         // lastUpdateWeekDay: currentDate.toLocaleDateString('en-US', { weekday: 'long' }),
-        periodsByDate: new Map()
+        periodsByDate: []
       }
       projects.set(name, newProject);
 
@@ -38,13 +37,6 @@ function projectsStore(timer: Stores) {
     timer.reset();
     // @ts-ignore TODO: figure out later
     timer.start(name);
-  }
-
-  function removeProject(id: number) {
-    update(projects => {
-      projects.delete(name);
-      return projects;
-    });
   }
 
   function setProjectToTimer(name: ProjectName) {
@@ -81,7 +73,7 @@ function projectsStore(timer: Stores) {
     const isoString = currentDate.toISOString();
 
     const weekDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(currentDate);
-    let newPeriods = new Map<Period>();
+    let newPeriods: Map<string, TimeData> = new Map();
     let totalTimespent = { h: 0, m: 0, s: 0 };
     let periodTimeSpent = timeSpent;
 
@@ -98,9 +90,7 @@ function projectsStore(timer: Stores) {
           totalTimespent = mergeTimeData(totalTimespent, difference);
         }
       } else {
-        console.log('totalTimespent before:', totalTimespent);
         totalTimespent = mergeTimeData(totalTimespent, timeSpent);
-        console.log('totalTimespent after:', totalTimespent);
       }
     }
 
@@ -125,36 +115,25 @@ function projectsStore(timer: Stores) {
     saveTimeData(data);
   }
 
-  function recalculateTimeSpent(periods: Map<Period>): TimeData {
-    return periods.entries().reduce((acc, [_, period]) => mergeTimeData(acc, period), { h: 0, m: 0, s: 0 });
-  }
-
   function toggleProject(projectName: ProjectName) {
-    console.log(timer.timerName);
-    const timerName = get(timer).timerName;
+    // @ts-ignore
+    const timerName = get(timer).timerName; //TODO: something wring with types here
+    // @ts-ignore
     const timerState = get(timer).state;
     const projects = get(projectsStorage);
-
-    console.log('timerName', timerName, 'timerState', timerState, 'projectName', projectName);
     
     if (timerName === projectName) {
-      console.log('timerName === projectName');
-      
       if (timerState === 'running') {
-        console.log('timerName === running');
         updateProject(timerName, timer.pause());
       } else {
-        console.log('timerName !== running');
         resumeProject(timerName);
       }
     } else {
-      console.log('timerName !== projectName');
       if (timerName !== '') {
         if (projects.has(timerName)) {
           updateProject(timerName, timer.pause());
         }
       }
-      console.log('resume');
 
       resumeProject(projectName);
     }
@@ -164,7 +143,6 @@ function projectsStore(timer: Stores) {
   return {
     subscribe,
     createProject,
-    removeProject,
     updateProject,
     resumeProject,
     setProjectToTimer,

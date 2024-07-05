@@ -1,12 +1,9 @@
 <script lang="ts">
-  import { activityHistory } from '../stores/activity-history';
-  import { onMount } from 'svelte';
-  import {dayWithMonth} from '../helpers';
-  import { Chart, registerables } from 'chart.js';
   import type { ChartConfiguration, ChartData } from 'chart.js';
+  import { Chart, registerables } from 'chart.js';
+  import { dayWithMonth } from '../helpers';
+  import { activityHistory } from '../stores/activity-history';
 
-
-  export let height: number = 0;
 
   let chartCanvas: HTMLCanvasElement;
   let activityChartContainer: HTMLDivElement;
@@ -15,9 +12,8 @@
   function initChart() {
     // debugger;
     if (chartCanvas) {
-      console.log('chartCanvas', chartCanvas);
       Chart.register(...registerables);
-      // const ctx = document.getElementById('activity-chart') as HTMLCanvasElement;
+      
       const data: ChartData = {
         labels: $activityHistory.histories.map((day) => dayWithMonth(day.date)),
         datasets: [
@@ -74,14 +70,6 @@
     }
   }
 
-
-
-  onMount(() => {
-    // if(activityChartContainer){
-    //   const parent = activityChartContainer.parentElement;
-    //   console.log('parent height', parent?.clientHeight);
-    // }
-  })
 </script>
 
 <div class="activity-chart" >

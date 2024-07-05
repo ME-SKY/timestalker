@@ -22,10 +22,27 @@ interface TimerData extends TimeData {
 
 const listOfAvailableTimezones = Intl.supportedValuesOf('timeZone');
 
-type Period = Record<DateSpan, TimeData>
+type Period = MapRecord<[DateSpan, TimeData]>
+
+// interface Period MapRecord<K, V> {
+//   [key: K]: V;
+// }
+
+interface MapRecord<K, V> {
+  [key: K]: V;
+}
+
+// type Period<, V> = MapRecord<K, V>;
+
+
+// interface MapRecord<K, V> {
+//   [key: K]: V;
+// }
+
+type MapType<K, V> = MapRecord<K, V>;
 
 interface ProjectData extends TimeData {
-  periodsByDate: Map<Period>,
+  periodsByDate: Period [],
   name?: string,
   lastUpdateDate?: string,
   lastUpdateWeekDay?: WeekDay
@@ -36,7 +53,7 @@ type Project = Record<ProjectName, ProjectData>
 interface DayHistory {
   date: string,
   score: TimeData,
-  projects: ProjectData [],
+  projects: Project [],
 }
 
 type TimezoneSetting = `${Locale}:${typeof listOfAvailableTimezones[number]}`;

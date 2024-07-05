@@ -51,7 +51,6 @@ function timerStore() {
   function startInterval() {
     interval = setInterval(() => {
       update((time) => {
-        console.log('interval running', time.s);
         if (time.s === 59) {
           time.s = 0;
           if (time.m === 59) {

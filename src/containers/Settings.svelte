@@ -1,12 +1,17 @@
 <script lang="ts">
   import SettingsIcon from '@assets/settings.svg?raw';
+  import { settings, currentTime } from '@/stores/settings';
+
 
 </script>
 
 <div class="settings-section">
   <div class="settings">
     <button>{@html SettingsIcon}</button>
-    <div class="current-time">Current time in two main timezones</div>
+    <div class="current-time">
+      <div class="main-time">{$currentTime.mainTime}</div>
+      <div class="sub-time">{$currentTime.additionalTime}</div>
+    </div>
     <div class="weather"></div>
   </div>
 </div>
