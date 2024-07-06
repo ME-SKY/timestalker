@@ -1,4 +1,4 @@
-import { get, writable } from 'svelte/store';
+import { get, writable, derived } from 'svelte/store';
 
 const initialSettings: Settings = {
   theme: 'basic-light',
@@ -20,6 +20,8 @@ function settingsStore() {
 
 
 export const settings = settingsStore();
+export const mainTimeCity = derived(settings, $settings => $settings.mainTimezone.split('/')[1].replace('_', '-'));
+export const additionalTimeCity = derived(settings, $settings => $settings.additionalTimezone.split('/')[1].replace('_', '-'));
 
 function currentTimeStore(settingsData: any) {
   const currTime = writable({ mainTime: '' as any, additionalTime: '' as any });

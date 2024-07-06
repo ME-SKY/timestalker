@@ -42,7 +42,7 @@ interface MapRecord<K, V> {
 type MapType<K, V> = MapRecord<K, V>;
 
 interface ProjectData extends TimeData {
-  periodsByDate: Period [],
+  periodsByDate: Map<Period>,
   name?: string,
   lastUpdateDate?: string,
   lastUpdateWeekDay?: WeekDay

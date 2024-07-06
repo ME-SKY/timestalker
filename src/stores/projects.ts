@@ -27,7 +27,7 @@ function projectsStore(timer: any) { //TODO: i dont know what type of timer stor
         stringRepresentation: '00:00:00',
         lastUpdateDate: currentDate.toISOString(),
         // lastUpdateWeekDay: currentDate.toLocaleDateString('en-US', { weekday: 'long' }),
-        periodsByDate: []
+        periodsByDate: new Map()
       }
       projects.set(name, newProject);
 
@@ -117,7 +117,7 @@ function projectsStore(timer: any) { //TODO: i dont know what type of timer stor
 
   function toggleProject(projectName: ProjectName) {
     // @ts-ignore
-    const timerName = get(timer).timerName; //TODO: something wring with types here
+    const timerName = get(timer).timerName; //TODO: something wrong with types here
     // @ts-ignore
     const timerState = get(timer).state;
     const projects = get(projectsStorage);

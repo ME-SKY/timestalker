@@ -56,8 +56,8 @@ function activityHistoryStore() {
 
     const dateGroupsArray = Array.from(dateGroups.entries()).map(([date, projects]) => {
       const score = projects.reduce((acc, project) => {
-
-        const periodTime = project.periodsByDate.get(date);
+        // @ts-ignore
+        const periodTime = project.periodsByDate?.get(date);//TODO: what is wrong here?
         return periodTime ? mergeTimeData(acc, { h: periodTime.h, m: periodTime.m, s: periodTime.s }) : acc;
       }, { h: 0, m: 0, s: 0 });
 
