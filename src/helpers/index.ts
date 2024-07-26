@@ -15,7 +15,7 @@ const MONTHS_BY_NUMBER: { [key: number]: { long: string, short: string } } = {
 
 export const getDateString = (date: Date): string => {
   const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  const localeDateArr = date.toLocaleDateString(undefined, options).replace(/\//g, '-').split('-');
+  const localeDateArr = date.toLocaleDateString(undefined, options as any).replace(/\//g, '-').split('-'); //any here cause i dont wanna do a typescipt jymnastics
   const localeDateString = `${localeDateArr[2]}-${localeDateArr[1]}-${localeDateArr[0]}`;
   return localeDateString;
 }
