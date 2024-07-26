@@ -107,9 +107,10 @@
     width: 100%;
     position: relative;
     height: calc(12% + 12px);
-    filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.2))
-      drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.3))
-      drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5));
+    //issue with tauri renderer, or how ot translates to webview with tauri i thing, have to comment this - to make design more consistent
+    // filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.2))
+    //   drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.3))
+    //   drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5));
   }
   .timer {
     position: relative;
