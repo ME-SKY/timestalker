@@ -54,8 +54,10 @@
     justify-content: space-between;
     align-items: center;
     overflow: hidden;
+    position: relative;
 
     button {
+      z-index: 2;
       background: transparent;
       outline: 0;
       box-shadow: none;
@@ -72,6 +74,7 @@
     }
 
     .weather {
+      z-index: 2;
       min-width: 44px;
     }
   }
@@ -81,6 +84,11 @@
     display: flex;
     flex-flow: column nowrap;
     gap: 2px;
+    width: calc(100% - 40px); // 40px - padding of parant container 20x2(left and riggt)
+    position: absolute; //to position element to actual center
+    left: 20px;
+    align-items: center;
+    z-index: 1;
 
     .main-time,
     .additional-time {

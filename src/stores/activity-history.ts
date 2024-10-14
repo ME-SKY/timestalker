@@ -17,6 +17,8 @@ interface ActivityHistory { //fix types later
 function activityHistoryStore() {
   const activityHistoryStorage = derived(projects, $projects => {
 
+    console.log('projects', $projects);
+
     const historyObject: ActivityHistory = {
       lastDate: undefined,
       totalScore: { h: 0, m: 0, s: 0 },
@@ -55,6 +57,8 @@ function activityHistoryStore() {
     // const latestGroup = dateGroups.get(latestDate);
 
     const dateGroupsArray = Array.from(dateGroups.entries()).map(([date, projects]) => {
+
+      console.log('date', date);
       const score = projects.reduce((acc, project) => {
         // @ts-ignore
         const periodTime = project.periodsByDate?.get(date);//TODO: what is wrong here?
@@ -64,6 +68,8 @@ function activityHistoryStore() {
       return { date, projects, score };
     });
 
+    console.log('latestdate', latestDate);
+
     const latestDateParts = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric' }).formatToParts(new Date(latestDate));
 
     historyObject.lastDate = {
@@ -71,7 +77,7 @@ function activityHistoryStore() {
       short: `${latestDateParts[2].value} ${latestDateParts[0].value}`
     };
    
-    historyObject.histories = dateGroupsArray;
+    historyObject.histories = dateGroupsArray.slice(-6); //6 - is standart short quantity of histories
 
     return historyObject;
   });

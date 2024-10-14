@@ -8,6 +8,10 @@
   import ActivityChart from './ActivityChart.svelte';
 
   let chartHeight: number;
+
+  $: {
+    console.log('history changed', $activityHistory.histories);
+  }
 </script>
 
 <div class="activity-history">
