@@ -1,23 +1,29 @@
 <script lang="ts">
   import { projects, projectsArray } from '../stores/projects';
   import { timer } from '../stores/timer';
-  import { activityHistory } from '../stores/activity-history';
+  import { activityHistory, histories } from '../stores/activity-history';
   import ProjectItem from '../components/ProjectItem.svelte';
   import DayHistory from './DayHistory.svelte';
   import { onMount } from 'svelte';
   import ActivityChart from './ActivityChart.svelte';
 
   let chartHeight: number;
+  // let histories = [];
+
+  // $: histories = $activityHistory.histories;
 
   $: {
-    console.log('history changed', $activityHistory.histories);
+    console.log('histories changed', histories);
+    // histories = $activityHistory.histories;
   }
 </script>
 
 <div class="activity-history">
   <div class="history">
-    {#each $activityHistory.histories as dayHistory (dayHistory.date)}
-      <DayHistory {dayHistory} />
+    
+    {#each $histories as dayHistory (dayHistory.date)}
+    <!-- {dayHistory.projects.length} -->
+      <DayHistory date={dayHistory.date} projects={dayHistory.projects} score={dayHistory.score} />
     {/each}
   </div>
 

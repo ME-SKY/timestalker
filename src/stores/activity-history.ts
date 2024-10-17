@@ -77,8 +77,9 @@ function activityHistoryStore() {
       short: `${latestDateParts[2].value} ${latestDateParts[0].value}`
     };
    
-    historyObject.histories = dateGroupsArray.slice(-6); //6 - is standart short quantity of histories
+    historyObject.histories = dateGroupsArray.sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime()).slice(-6); //6 - is standart short quantity of histories
 
+    console.log(historyObject.histories.map(his => his.date));
     return historyObject;
   });
 
@@ -90,4 +91,9 @@ function activityHistoryStore() {
 }
 
 export const activityHistory = activityHistoryStore();
+
+export const histories = derived(
+  activityHistory,
+  $activityHistory => $activityHistory.histories
+);
 

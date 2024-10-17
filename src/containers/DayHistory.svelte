@@ -1,7 +1,10 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
 
-  export let dayHistory: DayHistory;
+  // export let dayHistory: DayHistory;
+  export let date: string;
+  export let score: TimeData;
+  export let projects: Project[] = [];
 
   let opened = false;
 
@@ -9,7 +12,13 @@
   let leftSideTransparent = '';
   let rightSideTransparent = '';
 
-  const { date, score, projects } = dayHistory;
+  // const { date, score, projects } = dayHistory;
+
+  $: {
+    // console.log('day history', dayHistory);
+    console.log('day history. date', date);
+    console.log('projects', projects);
+  }
 
   function onScroll() {
     if (projectsTagsRef.scrollLeft > 5) {
@@ -38,7 +47,6 @@
   onDestroy(() => {
     projectsTagsRef.removeEventListener('scroll', onScroll);
   });
-
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -115,6 +123,11 @@
       align-items: center;
       font-size: 1.2rem;
       padding-bottom: 22px;
+
+      .score {
+        font-weight: 100;
+        font-size: 0.8rem;
+      }
     }
 
     .projects-tags {

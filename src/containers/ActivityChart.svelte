@@ -23,14 +23,24 @@
               (day) => day.score.h,
             ),
             fill: true,
-            backgroundColor: 'rgba(75,192,192,0.2)',
-            borderColor: 'rgba(75,192,192,1)',
+            // backgroundColor: 'rgba(75,192,192,0.2)',
+            // borderColor: 'rgba(75,192,192,1)',
             // tension: 2,
           },
         ],
       };
 
       const options: ChartConfiguration['options'] = {
+        backgroundColor: 'gray',
+        elements: {
+          bar: {
+            borderWidth: 0
+          },
+          line: {
+            borderWidth: 2,
+            stepped: false
+          }
+        },
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -41,14 +51,23 @@
         scales: {
           y: {
             min: 0,
-            max: 12,
+            max:  Math.max(...Object.values($activityHistory.histories).map(
+              (day) => day.score.h,
+            )),
             ticks: {
               stepSize: 1,
               callback: function(value) {
-                return value.toString();
+                return `${value.toString()}h`;
               },
             },
           },
+          x: {
+            grid: {
+              // drawTicks: false,
+              // drawOnChartArea: false,
+              display: false
+            },
+          }
         },
       };
 
@@ -62,10 +81,12 @@
 
   $: {
     if (!chart && $activityHistory.histories.length > 0) {
+      console.log('init chart');
       initChart();
     }
 
     if(chart && $activityHistory.histories.length > 0) {
+      console.log('it should update the chart')
       chart?.update();
     }
   }
