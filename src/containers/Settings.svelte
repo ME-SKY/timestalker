@@ -36,14 +36,14 @@
     height: 10%;
     background: transparent;
     // drop shadow blinks here on button hover, i dont know why, the problem is in how the rendering works with tauri, or maybe something another, i have to change styles without using dropshadow to make design more consistent
-    // filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.2))
-    //   drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.3))
-    //   drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.2))
+      drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.3))
+      drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5));
   }
 
   .settings {
     padding: 15px 20px 0 20px;
-    background: whitesmoke;
+    background: rgb(240, 13, 105);
     clip-path: path(
       'M0, 0 Q0,15 15,15 L385,15 Q400,15 400,0 L400,77, L0,77, L0,0 Z'
     );
@@ -66,11 +66,11 @@
       height: 44px;
       padding: 0;
       margin: 0;
-      transition: transform 0.3s ease;
+      // transition: transform 0.3s ease;
     }
 
     button:hover {
-      transform: rotate(90deg);
+      // transform: rotate(90deg);
     }
 
     .weather {

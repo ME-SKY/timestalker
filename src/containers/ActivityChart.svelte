@@ -31,7 +31,15 @@
       };
 
       const options: ChartConfiguration['options'] = {
-        backgroundColor: 'gray',
+        backgroundColor: 'black',
+        color: 'black',
+        
+        // legend: {
+        //         labels: {
+        //             fontColor: "blue",
+        //             fontSize: 18
+        //         }
+        //     },
         elements: {
           bar: {
             borderWidth: 0
@@ -45,11 +53,15 @@
         maintainAspectRatio: false,
         plugins: {
           legend: {
+            // labels: {
+              // color: 'black'
+            // },
             display: false,
           },
         },
         scales: {
           y: {
+            // color: 'black',
             min: 0,
             max:  Math.max(...Object.values($activityHistory.histories).map(
               (day) => day.score.h,
@@ -59,6 +71,7 @@
               callback: function(value) {
                 return `${value.toString()}h`;
               },
+              color: 'black'
             },
           },
           x: {
@@ -67,6 +80,9 @@
               // drawOnChartArea: false,
               display: false
             },
+            ticks: {
+              color: 'black'
+            }
           }
         },
       };

@@ -69,7 +69,7 @@
     <div bind:this={projectsTagsRef} class={`tags-container`}>
       {#each projects as project (project.name)}
         <div class="project-tag">
-          {project.name}
+          <span>{project.name}</span>
         </div>
       {/each}
     </div>
@@ -84,7 +84,7 @@
     position: relative;
     border-bottom: 1px solid rgba(74, 74, 74, 0.482);
     border-top: 1px solid rgba(74, 74, 74, 0.482);
-    background: whitesmoke;
+    background: rgb(240, 13, 105);
     padding: 0px 20px;
     width: 100%;
     height: 60px;
@@ -131,7 +131,7 @@
     }
 
     .projects-tags {
-      background: whitesmoke;
+      background: transparent;
       bottom: 22px;
       position: relative;
       gap: 8px;
@@ -142,7 +142,7 @@
         flex-flow: row nowrap;
         gap: 8px;
         overflow-x: auto;
-        background: whitesmoke;
+        background: transparent;
 
         &::-webkit-scrollbar {
           display: none;
@@ -162,8 +162,8 @@
         left: 0;
         background: linear-gradient(
           90deg,
-          #f5f5f5,
-          rgba(241, 241, 241, 0.001) 95%,
+          rgb(240, 13, 105),
+          rgba(240, 13, 105, 0.001) 95%,
           transparent
         );
       }
@@ -173,8 +173,8 @@
         background: linear-gradient(
           90deg,
           transparent,
-          rgba(241, 241, 241, 0.001) 5%,
-          #f5f5f5
+          rgba(240, 13, 105, 0.001) 5%,
+          rgb(240, 13, 105)
         );
       }
 
@@ -184,10 +184,17 @@
         justify-content: center;
         padding: 0 8px;
         font-size: 0.7rem;
-        min-width: 90px;
+        // min-width: 90px;
+        max-width: 95px;
         height: 20px;
         border-radius: 10px;
         border: 1px solid black;
+
+        > span {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
 
       &::-webkit-scrollbar {

@@ -13,6 +13,6 @@
 <style lang="scss">
   .container {
     height: 100vh;
-    background: lightgray;
+    background: rgb(252, 122, 167);
   }
 </style>

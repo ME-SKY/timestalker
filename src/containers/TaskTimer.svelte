@@ -61,7 +61,7 @@
         placeholder="project you working on"
         value={name}
         on:input={changeInputValue}
-        autocomplete="off"
+        autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
       />
     </div>
     <div class="time-spended">
@@ -108,13 +108,13 @@
     position: relative;
     height: calc(12% + 12px);
     //issue with tauri renderer, or how ot translates to webview with tauri i thing, have to comment this - to make design more consistent
-    // filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.2))
-    //   drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.3))
-    //   drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.2))
+      drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.3))
+      drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5));
   }
   .timer {
     position: relative;
-    background: whitesmoke;
+    background: rgb(240, 13, 105);
     height: 100%;
     padding: 8px 18px 20px 18px;
     width: 100%;
