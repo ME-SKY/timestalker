@@ -48,6 +48,8 @@ fn load_time_data() -> Result<String, String> {
   Ok(data)
 }
 
+
+
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 // #[tauri::command]
 // fn greet(name: &str) -> String {
@@ -55,8 +57,44 @@ fn load_time_data() -> Result<String, String> {
 // }
 
 fn main() {
-    tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![save_time_data, load_time_data])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+  #[cfg(target_os = "macos")]
+  {
+    use std::process::Command;
+
+    let output = Command::new("defaults")
+      .arg("write")
+      .arg("com.timestalker")
+      .arg("NSAppSleepDisabled")
+      .arg("-bool")
+      .arg("YES")
+      .output(); // Use output() instead of spawn()
+
+    match output {
+      Ok(output) => {
+        if output.status.success() {
+          println!("Command executed successfully!");
+          println!("Standard Output: {}", String::from_utf8_lossy(&output.stdout));
+        } else {
+          eprintln!("Command failed to execute!");
+          eprintln!("Standard Error: {}", String::from_utf8_lossy(&output.stderr));
+        }
+      }
+      Err(error) => {
+        eprintln!("Failed to execute command: {}", error);
+      }
+    }
+  }
+  tauri::Builder::default()
+    .on_window_event(|event| match event.event() {
+      tauri::WindowEvent::CloseRequested { api, .. } => {
+        event.window().hide().unwrap();
+        api.prevent_close();
+      }
+      tauri::WindowEvent::Focused(false) => println!("Window became inactive"),
+      _ => {}
+    })
+    .invoke_handler(tauri::generate_handler![save_time_data, load_time_data])
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
 }
+
