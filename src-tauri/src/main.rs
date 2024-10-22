@@ -42,6 +42,22 @@ async fn reset_timer(app_handle: tauri::AppHandle) {
     timer_store.reset().await;
 }
 
+#[tauri::command]
+async fn toggle_timer(app_handle: tauri::AppHandle, timer_name: Option<String>) {
+    let timer_store = app_handle.state::<Arc<TimerStore>>().clone();
+    let window = app_handle.get_window("main").unwrap();
+
+    match &timer_name {
+      Some(name) => println!("Received timer name: {}", name),
+      None => println!("No timer name provided."),
+  }
+
+    timer_store.toggle_timer(window, timer_name).await;
+    println!("toggle_timer command completed");
+}
+
+
+
 // Global state to store the AppHandle
 lazy_static! {
   static ref APP_HANDLE: Mutex<Option<tauri::AppHandle>> = Mutex::new(None);
@@ -196,7 +212,8 @@ fn main() {
       start_timer,
       pause_timer,
       resume_timer,
-      reset_timer])
+      reset_timer,
+      toggle_timer])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

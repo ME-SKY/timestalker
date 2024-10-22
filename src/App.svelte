@@ -11,8 +11,8 @@
 
 <main class="container">
   <TaskTimer />
-  <ActivityHistory />
-  <Settings />
+  <!-- <ActivityHistory /> -->
+  <!-- <Settings /> -->
 </main>
 
 <style lang="scss">

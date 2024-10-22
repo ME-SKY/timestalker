@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import type { ChartConfiguration, ChartData } from 'chart.js';
   import { Chart, registerables } from 'chart.js';
   import { dayWithMonth } from '../helpers';
@@ -10,7 +10,6 @@
   let chart: Chart | undefined;
 
   function initChart() {
-    // debugger;
     if (chartCanvas) {
       Chart.register(...registerables);
       
@@ -23,9 +22,6 @@
               (day) => day.score.h,
             ),
             fill: true,
-            // backgroundColor: 'rgba(75,192,192,0.2)',
-            // borderColor: 'rgba(75,192,192,1)',
-            // tension: 2,
           },
         ],
       };
@@ -33,13 +29,6 @@
       const options: ChartConfiguration['options'] = {
         backgroundColor: 'black',
         color: 'black',
-        
-        // legend: {
-        //         labels: {
-        //             fontColor: "blue",
-        //             fontSize: 18
-        //         }
-        //     },
         elements: {
           bar: {
             borderWidth: 0
@@ -53,15 +42,11 @@
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            // labels: {
-              // color: 'black'
-            // },
             display: false,
           },
         },
         scales: {
           y: {
-            // color: 'black',
             min: 0,
             max:  Math.max(...Object.values($activityHistory.histories).map(
               (day) => day.score.h,
@@ -76,8 +61,6 @@
           },
           x: {
             grid: {
-              // drawTicks: false,
-              // drawOnChartArea: false,
               display: false
             },
             ticks: {
@@ -116,11 +99,9 @@
 <style lang="scss">
   .activity-chart {
     height: 100%;
-    // width: 100%;
-
     #activity-chart {
       width: 100%;
       height: 100%;
     }
   }
-</style>
+</style> -->

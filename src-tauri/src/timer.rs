@@ -40,25 +40,54 @@ impl TimerStore {
         let mut data = self.data.lock().await;
         data.state = "running".to_string();
         data.timer_name = timer_name.clone();
-        drop(data);
+        drop(data); // Drop the lock before starting the interval
 
         self.start_interval(window).await;
     }
 
     pub async fn pause(&self) -> TimerData {
-        self.clear_interval().await;
-
-        let mut data = self.data.lock().await;
-        data.state = "paused".to_string();
-        data.clone()
-    }
+      println!("pause method starts");
+  
+      // Clear the interval
+      self.clear_interval().await;
+      println!("after clear interval");
+  
+      // Try to acquire the lock without blocking
+      match self.data.try_lock() {
+          Ok(mut data) => {
+              println!("Acquired data lock in pause");
+  
+              // Update the timer state
+              data.state = "paused".to_string();
+              println!("Timer state updated to paused");
+  
+              // Clone the data to return it later
+              let cloned_data = data.clone();
+              println!("Cloned data");
+  
+              // Drop the lock explicitly
+              drop(data);
+              println!("Data lock dropped in pause");
+  
+              // Return the cloned data
+              cloned_data
+          }
+          Err(_) => {
+              // Handle the case where the lock is already held
+              println!("Could not acquire data lock: already locked");
+              // Return a default or handle error case
+              self.data.lock().await.clone() // Block and wait if you want to retry
+          }
+      }
+  }
 
     pub async fn resume(&self, window: Window, timer_data: Option<TimerData>) {
         if let Some(new_data) = timer_data {
             let mut data = self.data.lock().await;
-            *data = new_data;
+            *data = new_data; // Update with the new data
         }
 
+        // Start the interval task again
         self.start_interval(window).await;
     }
 
@@ -76,46 +105,121 @@ impl TimerStore {
         };
     }
 
-    async fn start_interval(&self, window: Window) {
-        let data_arc = Arc::clone(&self.data);
+    pub async fn toggle_timer(&self, window: Window, timer_name: Option<String>) {
+        let mut data = self.data.lock().await;
 
-        // Clear any existing interval
-        self.clear_interval().await;
+        println!("toggle_timer called");
 
-        // Create a new interval task
-        let interval_task = tokio::spawn(async move {
-            loop {
-                let mut data = data_arc.lock().await;
-                if data.s == 59 {
-                    data.s = 0;
-                    if data.m == 59 {
-                        data.m = 0;
-                        data.h += 1;
-                    } else {
-                        data.m += 1;
-                    }
-                } else {
-                    data.s += 1;
-                }
-                data.string_representation = format!("{:02}:{:02}:{:02}", data.h, data.m, data.s);
-                
-                // Emit the updated time to the frontend
-                window.emit("timer-tick", &data.string_representation).unwrap();
-                
+        match data.state.as_str() {
+            "running" => {
+                // Log message for paused state
+                println!("Timer paused: {}", data.timer_name);
+
                 drop(data);
+                // Pause the timer
+                self.pause().await;
 
-                // Wait for 1 second
-                sleep(Duration::from_secs(1)).await;
+                // Emit event and log after pausing
+                // window.emit("timer-paused", self.data.string_representation).unwrap();
+                // println!("Timer is now paused: {}", data.timer_name);
             }
-        });
+            "paused" => {
+                // Log message for resumed state
+                println!("Timer resumed: {}", data.timer_name);
 
-        // Store the interval task
-        *self.interval_handle.lock().await = Some(interval_task);
-    }
+                // Emit event before resuming to avoid reusing the window
+                window.emit("timer-resumed", &data.string_representation).unwrap();
 
-    async fn clear_interval(&self) {
-        if let Some(handle) = self.interval_handle.lock().await.take() {
-            handle.abort();
+                // Resume the timer
+                self.resume(window, Some(data.clone())).await;
+
+                // Log after resuming the timer
+                println!("Timer is now resumed: {}", data.timer_name);
+            }
+            "stopped" => {
+                // Only start the timer if timer_name is provided
+                if let Some(name) = timer_name {
+                    // Log message for starting the timer
+                    println!("Timer will start for the first time: {}", name);
+                    
+                    drop(data); // Release the lock before calling `start()`
+                    self.start(window, name).await;
+
+                    // Log after starting the timer
+                    println!("Timer started from stopped");
+                } else {
+                    // Handle the case where no timer name is provided
+                    println!("Cannot start timer: No timer name provided.");
+                }
+            }
+            _ => {
+                println!("Unrecognized timer state.");
+            }
         }
+
+        // Final log to indicate completion
+        println!("toggle_timer completed");
     }
+
+    async fn start_interval(&self, window: Window) {
+      let data_arc = Arc::clone(&self.data);
+  
+      // Clear any existing interval
+      self.clear_interval().await;
+  
+      // Create a new interval task
+      let interval_task = tokio::spawn(async move {
+          loop {
+              println!("Interval task running...");
+              let mut data = data_arc.lock().await;
+  
+              // Update time
+              if data.s == 59 {
+                  data.s = 0;
+                  if data.m == 59 {
+                      data.m = 0;
+                      data.h += 1;
+                  } else {
+                      data.m += 1;
+                  }
+              } else {
+                  data.s += 1;
+              }
+  
+              data.string_representation = format!("{:02}:{:02}:{:02}", data.h, data.m, data.s);
+  
+              // Emit the updated time to the frontend
+              if let Err(e) = window.emit("timer-tick", &data.string_representation) {
+                  println!("Failed to emit timer-tick: {:?}", e);
+              }
+  
+              drop(data);
+  
+              // Wait for 1 second
+              sleep(Duration::from_secs(1)).await;
+          }
+      });
+  
+      // Store the interval task
+      let mut handle_lock = self.interval_handle.lock().await;
+      println!("Storing new interval task");
+      *handle_lock = Some(interval_task);
+  }
+
+  async fn clear_interval(&self) {
+    println!("clear_interval called");
+
+    let mut interval_handle = self.interval_handle.lock().await;
+    if let Some(handle) = interval_handle.take() {
+        println!("Interval handle found, aborting");
+        handle.abort(); // Abort the interval task if it exists
+        // drop(handle);
+        println!("after drop handle");
+    } else {
+        println!("No interval handle to clear");
+    }
+
+    println!("clear_interval completed");
+  }
+
 }

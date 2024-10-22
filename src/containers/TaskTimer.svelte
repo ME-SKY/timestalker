@@ -1,28 +1,35 @@
 <script lang="ts">
-  import { projects } from '../stores/projects';
-  import { timer, timerName } from '../stores/timer';
+  // import { projects } from '../stores/projects';
+  import { pauseTimer, startTimer as rustStartTimer, timerState as tState, toggleTimer as rustToggleTimer} from '../stores/timer';
   import { TIMER_ACTIONS_BASED_ON_STATE as TIMER_ACTIONS } from '../consts';
+
+  // let timerState = 'stopped';
 
   const startTimer = () => {
     if(name !== undefined) {
 
-      if ($projects.has(name)) {
-        projects.resumeProject(name);
-      } else {
-        projects.createProject(name);
-      }
+      // if ($projects.has(name)) {
+      //   projects.resumeProject(name);
+      // } else {
+      //   projects.createProject(name);
+      // }
     }
   };
 
   const toggleTimer = () => {
-    if ($timer.state === 'running') {
-      if ($timer.timerName) {
-        const newTimeData = timer.pause();
-        projects.updateProject($timer.timerName, newTimeData);
-      }
-    } else {
-      startTimer();
-    }
+    console.log('name', name);
+    rustToggleTimer(name);
+    // if (tState.state === 'paused') {
+    //   // timerState = TIMER_ACTIONS['paused'];
+    //   pauseTimer()
+    //   // if ($timer.timerName) {
+    //     // const newTimeData = timer.pause();
+    //     // projects.updateProject($timer.timerName, newTimeData);
+    //   // }
+    // } else {
+    //   // timerState = TIMER_ACTIONS['running']
+    //   rustStartTimer('test timer');
+    // }
   };
 
   const enterToggleTimer = (e: KeyboardEvent) => {
@@ -35,26 +42,26 @@
     const newValue = e.target.value;
     name = newValue;
 
-    if ($timer.state === 'running' && $timer.timerName) {
-      projects.updateProject($timer.timerName, timer.pause());
+    if (tState.state === 'running' && tState.timerName) {
+      // projects.updateProject($timer.timerName, timer.pause());
     }
 
-    if ($timer.stringRepresentation !== '00:00:00') {
-      timer.reset(false);
-    }
+    // if ($timer.stringRepresentation !== '00:00:00') {
+    //   timer.reset(false);
+    // }
   };
 
-  $: name = $timerName;
+  $: name = tState.timerName;
 
-  $: hours = $timer.h.toString().padStart(1, '0');
-  $: minutes = $timer.m.toString().padStart(2, '0');
-  $: seconds = $timer.s.toString().padStart(2, '0');
+  // $: hours = $timer.h.toString().padStart(1, '0');
+  // $: minutes = $timer.m.toString().padStart(2, '0');
+  // $: seconds = $timer.s.toString().padStart(2, '0');
 </script>
 
 <svelte:window on:keyup={(e) => name !== '' && enterToggleTimer(e)} />
 
 <div class="timer-wrapper">
-  <div class="timer" data-timer-state={$timer.state}>
+  <div class="timer" data-timer-state={tState.state}>
     <div class="task-name">
       <input
         type="text"
@@ -65,17 +72,17 @@
       />
     </div>
     <div class="time-spended">
-      <span class="time-value-hours">{hours}</span>
+      <span class="time-value-hours">{'00'}</span>
       <span class="delimeter">:</span>
-      <span class="time-value-minutes">{minutes}</span>
+      <span class="time-value-minutes">{'00'}</span>
       <span class="delimeter">:</span>
-      <span class="time-value-seconds">{seconds}</span>
+      <span class="time-value-seconds">{'00'}</span>
     </div>
     <button
       class="timer-state-switcher"
       disabled={name === ''}
       on:click={toggleTimer}
-      data-timer-action={TIMER_ACTIONS[$timer.state]}
+      data-timer-action={TIMER_ACTIONS[tState.state]}
       ><svg
         width="48"
         height="48"
